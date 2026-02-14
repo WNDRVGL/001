@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Event Message (SNS style)</title>
+  <title>Event Message (SNS style loop)</title>
 
   <!-- LINE Seed JP -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,8 +113,12 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLnD6M9UcMuxu-u4AzM_aOY_8yBR90NNPSYQp4rAVczef8jWkYiFrkxv3N2UQMivI2/exec";
     const TARGET_COL = "C";
 
-    // 10秒ごとに取得（読み込みはそのまま）
+    // 取得は10秒ごと（フォームはそのまま）
     const POLL_MS = 10000;
+
+    // 表示間隔：1〜3秒ランダム
+    const SHOW_INTERVAL_MIN_MS = 1000;
+    const SHOW_INTERVAL_MAX_MS = 3000;
 
     // 画面に残す最大数（1〜10）
     const MAX_ON_SCREEN = 10;
@@ -122,27 +126,27 @@
     // 20字でカット
     const MAX_CHARS = 20;
 
-    // 吹き出しが画面端に食い込まない余白（px）
+    // 端の余白
     const MARGIN = 20;
-
-    // ★表示間隔：1〜3秒をランダム
-    const SHOW_INTERVAL_MIN_MS = 1000;
-    const SHOW_INTERVAL_MAX_MS = 3000;
 
     const stage = document.getElementById("stage");
     const statusEl = document.getElementById("status");
 
-    let lastRowSeen = 1;
-    const seenKeys = new Set();
+    // --- データ管理 ---
+    // 全メッセージ（row順に保持）
+    const all = [];        // [{row, text}]
+    const indexByRow = new Map();
 
-    // 表示待ち（取得順＝1から順）
-    const queue = [];
+    // 次に表示する all のインデックス
+    let playIndex = 0;
 
-    // 画面上の吹き出し（古い順＝1から順）
-    const onScreen = [];
+    // 画面上の吹き出し（古い順）
+    const onScreen = [];   // [{el, idx}]
 
-    // 表示スケジューラ
+    // スケジューラ
     let nextTimer = null;
+
+    let lastRowSeen = 1;
 
     function setStatus(t){ statusEl.textContent = t; }
 
@@ -171,18 +175,6 @@
       return arr.slice(0, MAX_CHARS).join("");
     }
 
-    function enqueueMessage(text, rowId){
-      const clean = String(text || "").trim();
-      if(!clean) return;
-
-      const key = (rowId != null) ? `row:${rowId}` : `txt:${clean}`;
-      if(seenKeys.has(key)) return;
-      seenKeys.add(key);
-
-      // 取得順に並べる＝1から順に表示される
-      queue.push({ text: "#" + trimToMaxChars(clean), row: rowId });
-    }
-
     function randInt(min, max){
       return Math.floor(min + Math.random() * (max - min + 1));
     }
@@ -205,13 +197,13 @@
       el.style.top  = y + "px";
     }
 
-    function createBubble(msg){
+    function createBubble(text){
       const b = document.createElement("div");
       b.className = "bubble enter flash";
 
       const t = document.createElement("div");
       t.className = "text";
-      t.textContent = msg.text;
+      t.textContent = text;
 
       b.appendChild(t);
       stage.appendChild(b);
@@ -234,35 +226,71 @@
       }, 300);
     }
 
-    function stepShowNext(){
-      // キューが空なら待つ（pollで増える）
-      if(queue.length === 0){
+    // --- 仕様どおりの再生 ---
+    // ・最初のメッセージから順に表示
+    // ・10個目までは追加のみ
+    // ・11個目以降は最古を消して追加
+    // ・最後までいったら最初に戻って繰り返し
+    function showNext(){
+      if(all.length === 0){
+        setStatus("waiting messages…");
         scheduleNext();
-        setStatus(`ok | onScreen=${onScreen.length} | queue=0 | lastRow=${lastRowSeen}`);
         return;
       }
 
-      // 10個までは消さずに追加
-      if(onScreen.length < MAX_ON_SCREEN){
-        const msg = queue.shift();
-        const el = createBubble(msg);
-        onScreen.push({ el, row: msg.row });
-      } else {
-        // 10個揃ったら「1から順に消して、11以降を順に表示」
+      // 末尾までいったら最初へ
+      if(playIndex >= all.length) playIndex = 0;
+
+      // 表示する文言（#付与 + 20字カット）
+      const msg = all[playIndex];
+      const text = "#" + trimToMaxChars(msg.text);
+
+      // 10枠埋まっているなら、最古を消してから追加
+      if(onScreen.length >= MAX_ON_SCREEN){
         removeOldest();
-        const msg = queue.shift();
-        const el = createBubble(msg);
-        onScreen.push({ el, row: msg.row });
       }
 
-      setStatus(`ok | onScreen=${onScreen.length} | queue=${queue.length} | lastRow=${lastRowSeen}`);
+      const el = createBubble(text);
+      onScreen.push({ el, idx: playIndex });
+
+      playIndex += 1;
+
+      setStatus(`ok | total=${all.length} | playIndex=${playIndex}/${all.length} | onScreen=${onScreen.length}`);
       scheduleNext();
     }
 
     function scheduleNext(){
       if(nextTimer) clearTimeout(nextTimer);
       const wait = randInt(SHOW_INTERVAL_MIN_MS, SHOW_INTERVAL_MAX_MS);
-      nextTimer = setTimeout(stepShowNext, wait);
+      nextTimer = setTimeout(showNext, wait);
+    }
+
+    // --- 取得 ---
+    // 取得順（row順）を all に蓄積する
+    function upsertMessages(msgs){
+      let added = 0;
+
+      // msgs は row 昇順で来る想定
+      for(const m of msgs){
+        if(!m || !m.text) continue;
+
+        const row = Number(m.row);
+        const text = String(m.text);
+
+        if(!Number.isFinite(row)) continue;
+
+        if(!indexByRow.has(row)){
+          indexByRow.set(row, all.length);
+          all.push({ row, text });
+          added++;
+        } else {
+          // 同じ行が更新された場合は置換（任意）
+          const idx = indexByRow.get(row);
+          if(all[idx]) all[idx].text = text;
+        }
+      }
+
+      return added;
     }
 
     async function poll(){
@@ -274,16 +302,15 @@
 
         if(data && data.ok){
           const msgs = Array.isArray(data.messages) ? data.messages : [];
-          msgs.forEach(m => {
-            if(m && m.text) enqueueMessage(m.text, m.row);
-          });
+          const added = upsertMessages(msgs);
 
           const lr = Number(data.lastRow || lastRowSeen);
           if(Number.isFinite(lr)) lastRowSeen = Math.max(lastRowSeen, lr);
 
-          // 表示スケジューラが止まっていたら再開
+          // 取得できたら、スケジューラが止まっていた場合だけ再開
           if(!nextTimer) scheduleNext();
-          setStatus(`ok | polled | onScreen=${onScreen.length} | queue=${queue.length} | lastRow=${lastRowSeen}`);
+
+          setStatus(`ok | polled added=${added} | total=${all.length} | lastRow=${lastRowSeen} | onScreen=${onScreen.length}`);
         } else {
           setStatus("response not ok");
         }
@@ -296,10 +323,10 @@
       poll();
       setInterval(poll, POLL_MS);
 
-      // 起動時：表示スケジューラ開始
+      // 再生開始
       scheduleNext();
 
-      // リサイズ時：はみ出し回避で位置を再抽選
+      // リサイズ時：はみ出し対策で再配置
       window.addEventListener("resize", () => {
         onScreen.forEach(o => { if(o.el) placeRandomly(o.el); });
       });
