@@ -113,14 +113,17 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLnD6M9UcMuxu-u4AzM_aOY_8yBR90NNPSYQp4rAVczef8jWkYiFrkxv3N2UQMivI2/exec";
     const TARGET_COL = "C";
 
-    // 取得は10秒ごと（フォームはそのまま）
+    // 取得は10秒ごと
     const POLL_MS = 10000;
 
-    // 表示間隔：1〜3秒ランダム
-    const SHOW_INTERVAL_MIN_MS = 1000;
-    const SHOW_INTERVAL_MAX_MS = 3000;
+    // ★最初の10件までは1秒ごとに表示
+    const FIRST_FILL_INTERVAL_MS = 1000;
 
-    // 画面に残す最大数（1〜10）
+    // ★10件以上になったら（以降）1〜3秒ランダム
+    const LOOP_MIN_MS = 1000;
+    const LOOP_MAX_MS = 3000;
+
+    // 画面に残す最大数
     const MAX_ON_SCREEN = 10;
 
     // 20字でカット
@@ -132,20 +135,17 @@
     const stage = document.getElementById("stage");
     const statusEl = document.getElementById("status");
 
-    // --- データ管理 ---
     // 全メッセージ（row順に保持）
-    const all = [];        // [{row, text}]
-    const indexByRow = new Map();
+    const all = [];                 // [{row, text}]
+    const indexByRow = new Map();   // row -> index in all
 
-    // 次に表示する all のインデックス
+    // 次に表示する all のインデックス（ループ用）
     let playIndex = 0;
 
     // 画面上の吹き出し（古い順）
-    const onScreen = [];   // [{el, idx}]
+    const onScreen = [];            // [{el, idx}]
 
-    // スケジューラ
     let nextTimer = null;
-
     let lastRowSeen = 1;
 
     function setStatus(t){ statusEl.textContent = t; }
@@ -226,11 +226,17 @@
       }, 300);
     }
 
-    // --- 仕様どおりの再生 ---
-    // ・最初のメッセージから順に表示
-    // ・10個目までは追加のみ
-    // ・11個目以降は最古を消して追加
-    // ・最後までいったら最初に戻って繰り返し
+    // 表示間隔の決定
+    // - 画面が10個埋まるまでは1秒固定
+    // - all が10未満の間は「消さずに」そのまま追加（= 10未満で止まる）
+    // - all が10以上になったら、以降はループ/押し出しのルール + 1〜3秒ランダム
+    function nextIntervalMs(){
+      if (onScreen.length < MAX_ON_SCREEN) return FIRST_FILL_INTERVAL_MS;
+      if (all.length < MAX_ON_SCREEN) return FIRST_FILL_INTERVAL_MS; // 10未満なら押し出しルールに入らない
+      return randInt(LOOP_MIN_MS, LOOP_MAX_MS);
+    }
+
+    // 1ステップ表示
     function showNext(){
       if(all.length === 0){
         setStatus("waiting messages…");
@@ -238,21 +244,29 @@
         return;
       }
 
-      // 末尾までいったら最初へ
+      // 10未満のときは「消さずにそのまま表示を続ける」
+      // ⇒ onScreen が all.length に追いついたら、以降は追加できないので待機（表示は残る）
+      if (all.length < MAX_ON_SCREEN && onScreen.length >= all.length){
+        setStatus(`ok | total=${all.length} (<10) | onScreen=${onScreen.length} | waiting new…`);
+        scheduleNext();
+        return;
+      }
+
+      // 末尾までいったら最初へ（10以上ならループ）
       if(playIndex >= all.length) playIndex = 0;
 
-      // 表示する文言（#付与 + 20字カット）
       const msg = all[playIndex];
       const text = "#" + trimToMaxChars(msg.text);
 
-      // 10枠埋まっているなら、最古を消してから追加
-      if(onScreen.length >= MAX_ON_SCREEN){
-        removeOldest();
+      if(all.length >= MAX_ON_SCREEN){
+        // 10以上：10個目までは追加、11以降は最古を消して追加
+        if(onScreen.length >= MAX_ON_SCREEN) removeOldest();
+      } else {
+        // 10未満：消さずに追加（ただし上で追いついたら待機）
       }
 
       const el = createBubble(text);
       onScreen.push({ el, idx: playIndex });
-
       playIndex += 1;
 
       setStatus(`ok | total=${all.length} | playIndex=${playIndex}/${all.length} | onScreen=${onScreen.length}`);
@@ -261,22 +275,16 @@
 
     function scheduleNext(){
       if(nextTimer) clearTimeout(nextTimer);
-      const wait = randInt(SHOW_INTERVAL_MIN_MS, SHOW_INTERVAL_MAX_MS);
+      const wait = nextIntervalMs();
       nextTimer = setTimeout(showNext, wait);
     }
 
-    // --- 取得 ---
-    // 取得順（row順）を all に蓄積する
     function upsertMessages(msgs){
       let added = 0;
-
-      // msgs は row 昇順で来る想定
       for(const m of msgs){
         if(!m || !m.text) continue;
-
         const row = Number(m.row);
         const text = String(m.text);
-
         if(!Number.isFinite(row)) continue;
 
         if(!indexByRow.has(row)){
@@ -284,12 +292,10 @@
           all.push({ row, text });
           added++;
         } else {
-          // 同じ行が更新された場合は置換（任意）
           const idx = indexByRow.get(row);
           if(all[idx]) all[idx].text = text;
         }
       }
-
       return added;
     }
 
@@ -307,7 +313,6 @@
           const lr = Number(data.lastRow || lastRowSeen);
           if(Number.isFinite(lr)) lastRowSeen = Math.max(lastRowSeen, lr);
 
-          // 取得できたら、スケジューラが止まっていた場合だけ再開
           if(!nextTimer) scheduleNext();
 
           setStatus(`ok | polled added=${added} | total=${all.length} | lastRow=${lastRowSeen} | onScreen=${onScreen.length}`);
@@ -323,10 +328,9 @@
       poll();
       setInterval(poll, POLL_MS);
 
-      // 再生開始
+      // 表示開始
       scheduleNext();
 
-      // リサイズ時：はみ出し対策で再配置
       window.addEventListener("resize", () => {
         onScreen.forEach(o => { if(o.el) placeRandomly(o.el); });
       });
