@@ -23,19 +23,15 @@
       position:fixed;
       inset:0;
       background:#000;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 24px;
-      box-sizing:border-box;
+      overflow:hidden;
     }
 
     /* 吹き出し */
     .bubble{
-      position:relative;
-      width:min(920px, 92vw);
-      max-width: 92vw;
-      padding: clamp(18px, 3.2vh, 36px) clamp(18px, 3.2vh, 44px);
+      position:absolute;
+      width:min(820px, 86vw);
+      max-width: 86vw;
+      padding: clamp(14px, 2.6vh, 28px) clamp(14px, 2.6vh, 34px);
       border-radius: 26px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.16);
@@ -44,6 +40,7 @@
         inset 0 1px 0 rgba(255,255,255,.10);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
+      transform-origin: center;
     }
 
     /* しっぽ */
@@ -61,59 +58,26 @@
 
     .text{
       font-weight: 800;
-      font-size: clamp(30px, 6.2vh, 86px);
+      font-size: clamp(28px, 5.4vh, 80px);
       line-height: 1.12;
       letter-spacing: .02em;
-      text-align:left;
-      color: #ffffff;
+      color: #fff;
       text-shadow: 0 3px 22px rgba(0,0,0,.65);
       word-break: break-word;
       white-space: pre-wrap;
     }
 
-    .meta{
-      margin-top: 12px;
-      font-size: 14px;
-      color: rgba(255,255,255,.55);
-      font-weight: 700;
-      letter-spacing: .2px;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      user-select:none;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      color: rgba(255,255,255,.70);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    /* 出現/退場アニメ（SNSっぽく） */
+    /* 登場（新規追加） */
     .enter{
       opacity:0;
-      transform: translateY(14px) scale(1.03);
+      transform: translateY(14px) scale(1.04);
       animation: enter .22s ease-out forwards;
     }
     @keyframes enter{
       to{ opacity:1; transform: translateY(0) scale(1); }
     }
 
-    .leave{
-      animation: leave .28s ease-in forwards;
-    }
-    @keyframes leave{
-      to{ opacity:0; transform: translateY(-10px) scale(.98); }
-    }
-
-    /* 一瞬フラッシュ（新着強調） */
+    /* 新着フラッシュ */
     .flash{
       animation: flash .35s ease-out 1;
     }
@@ -121,6 +85,14 @@
       0%{ filter: brightness(1); }
       20%{ filter: brightness(1.9); }
       100%{ filter: brightness(1); }
+    }
+
+    /* 退場（押し出し） */
+    .leave{
+      animation: leave .28s ease-in forwards;
+    }
+    @keyframes leave{
+      to{ opacity:0; transform: translateY(-10px) scale(.98); }
     }
 
     .status{
@@ -138,45 +110,35 @@
 </head>
 
 <body>
-  <div class="stage">
-    <div id="bubble" class="bubble">
-      <div id="text" class="text">#connecting…</div>
-      <div class="meta">
-        <span class="pill">LIVE</span>
-        <span id="meta">waiting</span>
-      </div>
-    </div>
-  </div>
-
+  <div id="stage" class="stage" aria-label="メッセージ表示"></div>
   <div id="status" class="status">connecting…</div>
 
   <script>
     // Apps Script WebアプリURL(/exec)
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLnD6M9UcMuxu-u4AzM_aOY_8yBR90NNPSYQp4rAVczef8jWkYiFrkxv3N2UQMivI2/exec";
-
-    // C列固定（GASがC列だけ返す想定でも、HTMLから送っておく）
     const TARGET_COL = "C";
 
     // 10秒ごとに取得
     const POLL_MS = 10000;
 
-    // 1件の表示時間（約10秒）
-    const SHOW_MS = 10000;
+    // 最大表示数（1〜10を画面に残す）
+    const MAX_ON_SCREEN = 10;
 
     // 20字でカット
     const MAX_CHARS = 20;
 
+    // 吹き出しが画面端に食い込まない余白（px）
+    const MARGIN = 20;
+
+    const stage = document.getElementById("stage");
     const statusEl = document.getElementById("status");
-    const bubbleEl = document.getElementById("bubble");
-    const textEl = document.getElementById("text");
-    const metaEl = document.getElementById("meta");
 
     let lastRowSeen = 1;
     const seenKeys = new Set();
-
-    // 表示待ちキュー
     const queue = [];
-    let isShowing = false;
+
+    // 画面上に並んでいる吹き出し（古い順）
+    const onScreen = [];
 
     function setStatus(t){ statusEl.textContent = t; }
 
@@ -201,9 +163,7 @@
     }
 
     function trimToMaxChars(s){
-      const str = String(s ?? "");
-      // サロゲートペアも考慮して安全に切る（絵文字など）
-      const arr = Array.from(str);
+      const arr = Array.from(String(s ?? ""));
       return arr.slice(0, MAX_CHARS).join("");
     }
 
@@ -215,10 +175,87 @@
       if(seenKeys.has(key)) return;
       seenKeys.add(key);
 
-      queue.push({
-        text: "#" + trimToMaxChars(clean),
-        row: rowId
-      });
+      queue.push({ text: "#" + trimToMaxChars(clean), row: rowId });
+    }
+
+    // ランダム位置に配置（要素サイズを考慮してはみ出さないように）
+    function placeRandomly(el){
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      // 一旦表示してサイズを取る
+      el.style.left = "0px";
+      el.style.top  = "0px";
+
+      const r = el.getBoundingClientRect();
+      const maxX = Math.max(MARGIN, vw - r.width  - MARGIN);
+      const maxY = Math.max(MARGIN, vh - r.height - MARGIN);
+
+      const x = Math.floor(MARGIN + Math.random() * (maxX - MARGIN));
+      const y = Math.floor(MARGIN + Math.random() * (maxY - MARGIN));
+
+      el.style.left = x + "px";
+      el.style.top  = y + "px";
+    }
+
+    function createBubble(msg){
+      const b = document.createElement("div");
+      b.className = "bubble enter flash";
+
+      const t = document.createElement("div");
+      t.className = "text";
+      t.textContent = msg.text;
+
+      b.appendChild(t);
+      stage.appendChild(b);
+
+      placeRandomly(b);
+
+      // アニメクラス外し
+      setTimeout(() => b.classList.remove("enter"), 260);
+      setTimeout(() => b.classList.remove("flash"), 420);
+
+      return b;
+    }
+
+    function removeOldestThenAddNext(){
+      if (onScreen.length < MAX_ON_SCREEN) return;
+      if (queue.length === 0) return;
+
+      // 1から順番に消す＝最古を消す
+      const oldest = onScreen.shift();
+      if (oldest && oldest.el){
+        oldest.el.classList.add("leave");
+        setTimeout(() => {
+          oldest.el.remove();
+        }, 300);
+      }
+
+      // 次（11以降）を追加
+      const next = queue.shift();
+      const el = createBubble(next);
+      onScreen.push({ el, row: next.row });
+    }
+
+    function fillUpTo10(){
+      // 1〜10が揃うまで消さずに追加していく
+      while(onScreen.length < MAX_ON_SCREEN && queue.length > 0){
+        const msg = queue.shift();
+        const el = createBubble(msg);
+        onScreen.push({ el, row: msg.row });
+      }
+    }
+
+    function tick(){
+      // まず10個まで埋める
+      fillUpTo10();
+
+      // 10個揃っていて、キューがあれば「1から順に消して11以降を出す」
+      if(onScreen.length >= MAX_ON_SCREEN && queue.length > 0){
+        removeOldestThenAddNext();
+      }
+
+      setStatus(`ok | onScreen=${onScreen.length} | queue=${queue.length} | lastRow=${lastRowSeen}`);
     }
 
     async function poll(){
@@ -237,8 +274,7 @@
           const lr = Number(data.lastRow || lastRowSeen);
           if(Number.isFinite(lr)) lastRowSeen = Math.max(lastRowSeen, lr);
 
-          setStatus(`ok | queue=${queue.length} | lastRow=${lastRowSeen}`);
-          kick();
+          tick();
         } else {
           setStatus("response not ok");
         }
@@ -247,42 +283,14 @@
       }
     }
 
-    function showOne(msg){
-      isShowing = true;
-
-      // テキスト反映
-      textEl.textContent = msg.text;
-
-      const now = new Date();
-      metaEl.textContent = `${now.toLocaleTimeString()}  /  #${msg.row ?? "?"}`;
-
-      // アニメ
-      bubbleEl.classList.remove("leave");
-      bubbleEl.classList.add("enter", "flash");
-      setTimeout(() => bubbleEl.classList.remove("enter"), 260);
-      setTimeout(() => bubbleEl.classList.remove("flash"), 420);
-
-      // 10秒後に退場 → 次へ
-      setTimeout(() => {
-        bubbleEl.classList.add("leave");
-        setTimeout(() => {
-          bubbleEl.classList.remove("leave");
-          isShowing = false;
-          kick();
-        }, 300);
-      }, SHOW_MS);
-    }
-
-    function kick(){
-      if(isShowing) return;
-      if(queue.length === 0) return;
-      const msg = queue.shift();
-      showOne(msg);
-    }
-
     function init(){
       poll();
       setInterval(poll, POLL_MS);
+
+      // リサイズ時に位置を再抽選（はみ出し対策）
+      window.addEventListener("resize", () => {
+        onScreen.forEach(o => { if(o.el) placeRandomly(o.el); });
+      });
     }
 
     init();
