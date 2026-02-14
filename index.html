@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Event Message Timeline</title>
+  <title>Event Message (SNS style loop)</title>
 
   <!-- LINE Seed JP -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,76 +19,72 @@
       font-family:"LINE Seed JP", system-ui, -apple-system, "Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo", sans-serif;
     }
 
-    /* 黒一色 */
     .stage{
       position:fixed;
       inset:0;
       background:#000;
       overflow:hidden;
-      padding: 22px 18px;
-      box-sizing:border-box;
     }
 
-    /* タイムライン（下に寄せる） */
-    .timeline{
-      position:absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 18px;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-end;
-      gap: 10px;
-      pointer-events:none;
-    }
-
-    /* 吹き出し（横幅は画面に合わせる） */
+    /* 吹き出し */
     .bubble{
-      width: min(980px, 100%);
-      margin-left: 0;
-      margin-right: auto;
-      padding: 14px 18px;
-      border-radius: 18px;
+      position:absolute;
+      width:min(820px, 86vw);
+      max-width: 86vw;
+      padding: clamp(14px, 2.6vh, 28px) clamp(14px, 2.6vh, 34px);
+      border-radius: 26px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.16);
       box-shadow:
-        0 14px 44px rgba(0,0,0,.55),
-        inset 0 1px 0 rgba(255,255,255,.08);
+        0 24px 70px rgba(0,0,0,.65),
+        inset 0 1px 0 rgba(255,255,255,.10);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      transform-origin: left bottom;
+      transform-origin: center;
     }
-
+    .bubble:after{
+      content:"";
+      position:absolute;
+      left: 46px;
+      bottom: -18px;
+      width: 0; height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-top: 18px solid rgba(255,255,255,.10);
+      filter: drop-shadow(0 4px 0 rgba(255,255,255,.06));
+    }
     .text{
-      color:#fff;
       font-weight: 800;
-      font-size: clamp(20px, 3.3vh, 44px);
-      line-height: 1.2;
+      font-size: clamp(28px, 5.4vh, 80px);
+      line-height: 1.12;
       letter-spacing: .02em;
-      text-shadow: 0 2px 16px rgba(0,0,0,.7);
+      color: #fff;
+      text-shadow: 0 3px 22px rgba(0,0,0,.65);
       word-break: break-word;
       white-space: pre-wrap;
     }
 
-    /* 新着：0.2秒でポップ */
-    .pop{
-      opacity: 0;
-      transform: translateY(8px) scale(1.05);
-      animation: popIn .20s ease-out forwards;
+    /* 登場 */
+    .enter{
+      opacity:0;
+      transform: translateY(14px) scale(1.04);
+      animation: enter .22s ease-out forwards;
     }
-    @keyframes popIn{
-      to{ opacity:1; transform: translateY(0) scale(1); }
+    @keyframes enter{ to{ opacity:1; transform: translateY(0) scale(1); } }
+
+    /* 新着フラッシュ */
+    .flash{ animation: flash .35s ease-out 1; }
+    @keyframes flash{
+      0%{ filter: brightness(1); }
+      20%{ filter: brightness(1.9); }
+      100%{ filter: brightness(1); }
     }
 
-    /* 1つ上に押し上げる時に気持ちよく */
-    .push{
-      animation: pushUp .18s ease-out;
-    }
-    @keyframes pushUp{
-      from { transform: translateY(8px); }
-      to   { transform: translateY(0); }
-    }
+    /* 退場 */
+    .leave{ animation: leave .28s ease-in forwards; }
+    @keyframes leave{ to{ opacity:0; transform: translateY(-10px) scale(.98); } }
 
+    /* デバッグ表示 */
     .status{
       position: fixed;
       left: 12px;
@@ -100,54 +96,119 @@
       letter-spacing: .2px;
       pointer-events:none;
       white-space: pre;
+      text-shadow: 0 2px 10px rgba(0,0,0,.8);
+    }
+
+    /* 致命的エラー表示 */
+    .fatal{
+      position: fixed;
+      inset: 0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 24px;
+      box-sizing:border-box;
+      background: rgba(0,0,0,.92);
+      z-index: 10;
+    }
+    .fatal.show{ display:flex; }
+    .fatal .box{
+      width:min(980px, 94vw);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      padding: 18px 18px;
+      box-shadow: 0 26px 80px rgba(0,0,0,.7);
+      color:#fff;
+    }
+    .fatal .ttl{
+      font-size:16px;
+      font-weight: 900;
+      margin:0 0 8px;
+    }
+    .fatal .msg{
+      margin:0;
+      font-size: 13px;
+      opacity:.9;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
   </style>
 </head>
 
 <body>
-  <div class="stage">
-    <div id="timeline" class="timeline" aria-label="タイムライン表示"></div>
+  <div id="stage" class="stage" aria-label="メッセージ表示"></div>
+  <div id="fatal" class="fatal" aria-hidden="true">
+    <div class="box">
+      <p class="ttl">接続エラー（Apps Script / JSONP）</p>
+      <p id="fatalMsg" class="msg"></p>
+    </div>
   </div>
   <div id="status" class="status">booting…</div>
 
   <script>
-    // Apps Script WebアプリURL(/exec)
+    // ===== 設定 =====
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLnD6M9UcMuxu-u4AzM_aOY_8yBR90NNPSYQp4rAVczef8jWkYiFrkxv3N2UQMivI2/exec";
     const TARGET_COL = "C";
 
-    // 取得は10秒ごと
-    const POLL_MS = 10000;
+    const POLL_MS = 10000;          // 取得間隔
+    const MAX_ON_SCREEN = 10;       // 画面に残す最大数
+    const MAX_CHARS = 20;           // 20字でカット（以降は捨てる）
+    const MARGIN = 20;              // 画面端の余白
 
-    // 表示間隔（タイムラインは一定の方が分かりやすいので 1秒固定）
-    const STEP_MS = 1000;
+    const FIRST_FILL_INTERVAL_MS = 1000; // 最初の10件は1秒固定
+    const LOOP_MIN_MS = 1000;            // 10件以上になった後：1〜3秒ランダム
+    const LOOP_MAX_MS = 3000;
 
-    // 20字でカット
-    const MAX_CHARS = 20;
-
-    // 画面に表示できる最大行数（画面高さから自動でだいたい推定）
-    function maxLines(){
-      const vh = window.innerHeight;
-      // 1行あたりの高さ（吹き出し+gap）を概算 76px〜
-      const approxRow = 76;
-      return Math.max(4, Math.floor((vh - 60) / approxRow));
-    }
-
-    const timeline = document.getElementById("timeline");
+    // ===== DOM =====
+    const stage = document.getElementById("stage");
     const statusEl = document.getElementById("status");
+    const fatalEl = document.getElementById("fatal");
+    const fatalMsgEl = document.getElementById("fatalMsg");
 
-    // 取得した全メッセージ（row順で保持）
-    const all = [];
-    const indexByRow = new Map();
-    let playIndex = 0;
+    // ===== 状態 =====
     let lastRowSeen = 1;
 
-    let pollTimer = null;
-    let stepTimer = null;
+    // 取得した全メッセージ（row順で保持）
+    const all = [];                 // [{row:number, text:string}]
+    const indexByRow = new Map();   // row -> index
 
+    // 画面上の吹き出し（古い順）
+    const onScreen = [];            // [{el:HTMLElement}]
+
+    // 次に表示するインデックス（all内）
+    let playIndex = 0;
+
+    // タイマー
+    let showTimer = null;
+    let pollTimer = null;
+
+    // ===== ユーティリティ =====
     function setStatus(lines){
       statusEl.textContent = Array.isArray(lines) ? lines.join("\n") : String(lines);
     }
 
+    function showFatal(msg){
+      fatalMsgEl.textContent = String(msg || "");
+      fatalEl.classList.add("show");
+      fatalEl.setAttribute("aria-hidden","false");
+    }
+    function hideFatal(){
+      fatalEl.classList.remove("show");
+      fatalEl.setAttribute("aria-hidden","true");
+    }
+
+    function randInt(min, max){
+      return Math.floor(min + Math.random() * (max - min + 1));
+    }
+
+    function trimToMaxChars(s){
+      const arr = Array.from(String(s ?? ""));
+      return arr.slice(0, MAX_CHARS).join("");
+    }
+
+    // ===== JSONP =====
     function fetchJSONP(url, params = {}) {
       return new Promise((resolve, reject) => {
         const cbName = "cb_" + Math.random().toString(36).slice(2);
@@ -188,15 +249,144 @@
       });
     }
 
-    function trimToMaxChars(s){
-      const arr = Array.from(String(s ?? ""));
-      return arr.slice(0, MAX_CHARS).join("");
+    // ===== 表示 =====
+    function placeRandomly(el){
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      // サイズ計測用に仮置き
+      el.style.left = "0px";
+      el.style.top  = "0px";
+
+      const r = el.getBoundingClientRect();
+      const maxX = Math.max(MARGIN, vw - r.width  - MARGIN);
+      const maxY = Math.max(MARGIN, vh - r.height - MARGIN);
+
+      const x = Math.floor(MARGIN + Math.random() * Math.max(1, (maxX - MARGIN)));
+      const y = Math.floor(MARGIN + Math.random() * Math.max(1, (maxY - MARGIN)));
+
+      el.style.left = x + "px";
+      el.style.top  = y + "px";
     }
 
+    function createBubble(text){
+      const b = document.createElement("div");
+      b.className = "bubble enter flash";
+
+      const t = document.createElement("div");
+      t.className = "text";
+      t.textContent = text;
+
+      b.appendChild(t);
+      stage.appendChild(b);
+
+      placeRandomly(b);
+
+      setTimeout(() => b.classList.remove("enter"), 260);
+      setTimeout(() => b.classList.remove("flash"), 420);
+
+      return b;
+    }
+
+    function removeOldest(){
+      const oldest = onScreen.shift();
+      if (!oldest || !oldest.el) return;
+
+      oldest.el.classList.add("leave");
+      setTimeout(() => oldest.el.remove(), 300);
+    }
+
+    function clearAllBubbles(){
+      // いったん全部消して「最初からやり直し」用
+      while(onScreen.length){
+        const o = onScreen.pop();
+        if(o?.el) o.el.remove();
+      }
+    }
+
+    // 表示間隔ルール
+    function nextIntervalMs(){
+      // 最初の10個が埋まるまでは1秒固定
+      if (onScreen.length < Math.min(MAX_ON_SCREEN, all.length)) return FIRST_FILL_INTERVAL_MS;
+
+      // 10件未満のとき：表示し切ったら「最初からやり直し」するので 1秒固定で回し続ける
+      if (all.length < MAX_ON_SCREEN) return FIRST_FILL_INTERVAL_MS;
+
+      // 10件以上：前回ルール（1〜3秒ランダム）
+      return randInt(LOOP_MIN_MS, LOOP_MAX_MS);
+    }
+
+    function scheduleShow(){
+      if(showTimer) clearTimeout(showTimer);
+      showTimer = setTimeout(showStep, nextIntervalMs());
+    }
+
+    // 仕様（改善ポイント）
+    // - 最初から順に読み込み（row順に all を構築）
+    // - 1〜10は順に表示（消さない）
+    // - 11以降は 1→消して11、2→消して12 …（最古を消して追加）
+    // - 最後まで行ったら最初からやり直し（10未満でも10以上でも）
+    function showStep(){
+      hideFatal();
+
+      if(all.length === 0){
+        setStatus([
+          "waiting… (no messages yet)",
+          `poll=${POLL_MS/1000}s  | col=${TARGET_COL}`,
+          `url=Apps Script`
+        ]);
+        scheduleShow();
+        return;
+      }
+
+      // 末尾まで行ったら最初からやり直し
+      if(playIndex >= all.length){
+        playIndex = 0;
+
+        // 10未満の場合：同じメッセージが残ったままだと「やり直し感」が弱いので、いったんクリアして再表示
+        // 10以上の場合：ルール上、押し出しで自然に入れ替わるが、「最初から」を明確にするため playIndex を0に戻すだけでOK
+        if(all.length < MAX_ON_SCREEN){
+          clearAllBubbles();
+        }
+      }
+
+      // 表示する文字（# + 20字カット）
+      const msg = all[playIndex];
+      const text = "#" + trimToMaxChars(msg.text);
+
+      if(all.length >= MAX_ON_SCREEN){
+        // 10以上：11個目から押し出し
+        if(onScreen.length >= MAX_ON_SCREEN) removeOldest();
+      } else {
+        // 10未満：埋まるまでは追加、埋まったら（=all.length）末尾まで行った時にclearAllBubbles()して再スタート
+        if(onScreen.length >= all.length){
+          // 念のためのガード（通常は playIndex の巻戻し時に消える）
+          scheduleShow();
+          return;
+        }
+      }
+
+      const el = createBubble(text);
+      onScreen.push({ el });
+
+      playIndex += 1;
+
+      setStatus([
+        `ok | total=${all.length} | onScreen=${onScreen.length}`,
+        `playIndex=${playIndex}/${all.length} | next=${Math.round(nextIntervalMs())}ms`,
+        `lastRow=${lastRowSeen}`
+      ]);
+
+      scheduleShow();
+    }
+
+    // ===== 取得（row順で追加）=====
     function upsertMessages(msgs){
       let added = 0;
+
       for(const m of msgs){
         if(!m || !m.text) continue;
+
         const row = Number(m.row);
         if(!Number.isFinite(row)) continue;
 
@@ -207,10 +397,12 @@
           all.push({ row, text });
           added++;
         } else {
+          // 同一行更新が起きる場合に備えて置換
           const idx = indexByRow.get(row);
           if(all[idx]) all[idx].text = text;
         }
       }
+
       return added;
     }
 
@@ -221,7 +413,10 @@
           col: TARGET_COL
         });
 
-        if(!data || data.ok !== true) throw new Error("response not ok");
+        // 期待フォーマット：{ ok:true, messages:[{row,text}], lastRow:number }
+        if(!data || data.ok !== true){
+          throw new Error("response not ok (data.ok !== true)");
+        }
 
         const msgs = Array.isArray(data.messages) ? data.messages : [];
         const added = upsertMessages(msgs);
@@ -231,88 +426,44 @@
 
         setStatus([
           `ok | polled added=${added} | total=${all.length}`,
-          `playIndex=${playIndex}/${Math.max(1,all.length)} | lastRow=${lastRowSeen}`,
-          `maxLines≈${maxLines()}`
+          `onScreen=${onScreen.length} | playIndex=${playIndex}/${Math.max(1,all.length)}`,
+          `lastRow=${lastRowSeen}`
         ]);
       } catch(e){
+        // ここが出てる場合：GASのJSONP/権限/レスポンス構造が原因の可能性が高い
         setStatus([
           `error: ${e.message}`,
-          `check: ?since=1&callback=cb_test&col=C`
+          `hint: open exec?since=1&callback=cb_test&col=C`,
+          `url: ${SCRIPT_URL}`
         ]);
+        showFatal(
+          "Apps Script の返り値が JSONP になっていない / 権限NG / 返却JSONのキー不一致 などが原因です。\n\n" +
+          "確認URL例:\n" +
+          SCRIPT_URL + "?since=1&callback=cb_test&col=C\n\n" +
+          "期待する返り方:\n" +
+          "cb_test({\"ok\":true,\"messages\":[{\"row\":2,\"text\":\"...\"}],\"lastRow\":123})\n\n" +
+          "現在のエラー:\n" + e.message
+        );
       }
     }
 
-    function pushTimelineUpAnimation(){
-      // 既存行に軽いpushアニメ
-      [...timeline.children].forEach(el => {
-        el.classList.remove("push");
-        // reflow
-        void el.offsetWidth;
-        el.classList.add("push");
-      });
-    }
-
-    function addLine(text){
-      const bubble = document.createElement("div");
-      bubble.className = "bubble pop";
-      const t = document.createElement("div");
-      t.className = "text";
-      t.textContent = text;
-      bubble.appendChild(t);
-
-      // 追加＝最下部に入る（columnなので末尾が下）
-      timeline.appendChild(bubble);
-
-      // はみ出たら先頭（最上段）を削除
-      const limit = maxLines();
-      while(timeline.children.length > limit){
-        timeline.removeChild(timeline.firstElementChild);
-      }
-
-      // アニメ整形
-      setTimeout(() => bubble.classList.remove("pop"), 240);
-    }
-
-    function step(){
-      if(all.length === 0) return;
-
-      // 最終まで行ったら最初に戻す
-      if(playIndex >= all.length) playIndex = 0;
-
-      // 押し上げ → 最下部に新規
-      pushTimelineUpAnimation();
-
-      const msg = all[playIndex];
-      const text = "#" + trimToMaxChars(msg.text);
-      addLine(text);
-
-      playIndex += 1;
-
-      setStatus([
-        `ok | total=${all.length} | playIndex=${playIndex}/${all.length}`,
-        `onScreen=${timeline.children.length} | maxLines≈${maxLines()}`,
-        `lastRow=${lastRowSeen}`
-      ]);
-    }
-
-    function start(){
-      // 取得
+    function init(){
+      // すぐ1回取得
       poll();
+
+      // 定期取得
       pollTimer = setInterval(poll, POLL_MS);
 
-      // 表示
-      stepTimer = setInterval(step, STEP_MS);
+      // 表示開始
+      scheduleShow();
 
-      // resizeで表示行数が変わるので調整
+      // リサイズ時：はみ出し防止で再配置
       window.addEventListener("resize", () => {
-        const limit = maxLines();
-        while(timeline.children.length > limit){
-          timeline.removeChild(timeline.firstElementChild);
-        }
+        onScreen.forEach(o => { if(o?.el) placeRandomly(o.el); });
       });
     }
 
-    start();
+    init();
   </script>
 </body>
 </html>
