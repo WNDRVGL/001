@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>新卒採用 | WONDERVOGEL</title>
+  <title>WONDERVOGEL 新卒採用</title>
   <meta name="description" content="クリエイティブで生きていく、クリエイティブで良くしていく。仙台を拠点にブランディング、マーケティング、クリエイティブを手がける株式会社WONDERVOGELの新卒採用サイトです。" />
   <meta property="og:title" content="新卒採用 | WONDERVOGEL" />
   <meta property="og:description" content="あなたの好奇心を、誰かの未来につなげよう。仙台のクリエイティブ会社WONDERVOGELが新しい仲間を募集しています。" />
@@ -16,6 +16,7 @@
 
   <style>
     :root{
+      color-scheme:light;
       --ink:#111111;
       --paper:#f4f1ea;
       --paper-2:#e9e4d8;
@@ -60,7 +61,7 @@
     .header{
       position:fixed; inset:0 0 auto 0; z-index:50;
       display:flex; align-items:center; justify-content:space-between;
-      padding:14px var(--gutter);
+      padding:calc(14px + env(safe-area-inset-top, 0px)) var(--gutter) 14px;
       color:var(--white);
       mix-blend-mode:difference;
       pointer-events:none;
@@ -390,13 +391,12 @@
     .footer small{ font-family:var(--en); letter-spacing:.12em; }
 
     /* ===== Reveal ===== */
-    .js .rv{ opacity:0; transform:translateY(24px); transition:opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
-    .js .rv.in{ opacity:1; transform:none; }
-    .js .rv.d1{ transition-delay:.1s; }
-    .js .rv.d2{ transition-delay:.2s; }
-    .js .rv.d3{ transition-delay:.3s; }
-
-    .hero .rv{ transition-duration:1.2s; }
+    /* 初期表示で画面外にある要素だけを隠し、スクロールで表示（画面内の要素は最初から見える） */
+    .rv.wait{ opacity:0; transform:translateY(24px); }
+    .rv.go{ transition:opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+    .rv.go.d1{ transition-delay:.1s; }
+    .rv.go.d2{ transition-delay:.2s; }
+    .rv.go.d3{ transition-delay:.3s; }
 
     @media (max-width:599px){
       body{ line-height:1.95; }
@@ -409,14 +409,12 @@
     @media (prefers-reduced-motion:reduce){
       html{ scroll-behavior:auto; }
       .marquee-track{ animation:none; }
-      .js .rv{ opacity:1; transform:none; transition:none; }
+      .rv.wait{ opacity:1; transform:none; }
     }
   </style>
 </head>
 
 <body>
-  <script>document.documentElement.classList.add("js");</script>
-
   <header class="header">
     <a class="logo" href="#top" aria-label="WONDERVOGEL トップへ">WONDERVOGEL</a>
     <a class="header-cta" href="#entry">ENTRY</a>
@@ -642,15 +640,18 @@
   <script>
     // スクロールに合わせてフェードイン
     (function(){
-      var els = document.querySelectorAll(".rv");
-      if(!("IntersectionObserver" in window)){
-        els.forEach(function(el){ el.classList.add("in"); });
-        return;
-      }
+      if(!("IntersectionObserver" in window)) return;
+      if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var vh = window.innerHeight;
+      var els = Array.prototype.filter.call(document.querySelectorAll(".rv"), function(el){
+        return el.getBoundingClientRect().top > vh;
+      });
+      els.forEach(function(el){ el.classList.add("wait"); });
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(e){
           if(e.isIntersecting){
-            e.target.classList.add("in");
+            e.target.classList.add("go");
+            e.target.classList.remove("wait");
             io.unobserve(e.target);
           }
         });
