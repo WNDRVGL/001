@@ -5,31 +5,39 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>WONDERVOGEL 新卒採用</title>
   <meta name="description" content="クリエイティブで生きていく、クリエイティブで良くしていく。仙台を拠点にブランディング、マーケティング、クリエイティブを手がける株式会社WONDERVOGELの新卒採用サイトです。" />
-  <meta property="og:title" content="新卒採用 | WONDERVOGEL" />
+  <meta property="og:title" content="WONDERVOGEL 新卒採用" />
   <meta property="og:description" content="あなたの好奇心を、誰かの未来につなげよう。仙台のクリエイティブ会社WONDERVOGELが新しい仲間を募集しています。" />
   <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#111111" />
+  <meta name="theme-color" content="#ffffff" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend+Zetta:wght@200;300&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;600;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
+    /* 白とブルーグレーの紙面に、網点を重ねたシアン〜ブルーのグラデーション。
+       極細ワイドの英字見出し＋明朝の和文、細い罫線の箱と四角い矢印ボタンで構成 */
     :root{
       color-scheme:light;
-      --ink:#111111;
-      --paper:#f4f1ea;
-      --paper-2:#e9e4d8;
-      --white:#ffffff;
-      --accent:#ff4a1c;
-      --muted:#6b675f;
-      --line:rgba(17,17,17,.14);
+      --ink:#111417;
+      --paper:#ffffff;
+      --mist:#eaf0f3;
+      --steel:#38505f;
+      --blue:#0a92e3;
+      --cyan:#62e6d8;
+      --gray:#5b6870;
+      --rule:#111417;
 
-      --jp:"Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", sans-serif;
-      --en:"Archivo", "Helvetica Neue", Arial, sans-serif;
+      --grad:linear-gradient(118deg, #0a92e3 0%, #3fb8f0 38%, #8ff0e2 72%, #f1fdfb 100%);
+      --grad-soft:linear-gradient(120deg, #8cc6f3 0%, #a9d8f6 45%, #a9e6e0 100%);
 
-      --gutter:clamp(16px, 5vw, 64px);
-      --max:1200px;
+      --serif:"Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+      --sans:"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      --wide:"Lexend Zetta", "Helvetica Neue", Arial, sans-serif;
+      --label:"Syncopate", "Helvetica Neue", Arial, sans-serif;
+
+      --gutter:clamp(16px, 4.2vw, 64px);
+      --max:1280px;
     }
 
     *,*::before,*::after{ box-sizing:border-box; }
@@ -38,377 +46,624 @@
       margin:0;
       background:var(--paper);
       color:var(--ink);
-      font-family:var(--jp);
-      font-size:16px;
+      font-family:var(--sans);
+      font-size:15px;
       line-height:2;
       letter-spacing:.04em;
       font-feature-settings:"palt";
       overflow-x:hidden;
     }
-    img{ max-width:100%; display:block; }
     a{ color:inherit; }
-    p{ margin:0 0 1.2em; }
+    p{ margin:0 0 1.1em; }
     p:last-child{ margin-bottom:0; }
+    :focus-visible{ outline:2px solid var(--blue); outline-offset:3px; }
 
     .wrap{
       width:100%;
       max-width:calc(var(--max) + var(--gutter) * 2);
       margin:0 auto;
-      padding:0 var(--gutter);
+      padding-inline:var(--gutter);
     }
+
+    /* 網点（ハーフトーン） */
+    .dots{ position:relative; isolation:isolate; }
+    .dots::after{
+      content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+      background-image:radial-gradient(circle, rgba(255,255,255,.62) 0 1px, transparent 1.5px);
+      background-size:6px 6px;
+    }
+    .dots > *{ position:relative; z-index:1; }
+
+    /* 四角い矢印ボタン */
+    .sq{
+      flex:none;
+      width:36px; height:36px;
+      display:grid; place-items:center;
+      border:1px solid var(--rule);
+      background:var(--paper);
+      transition:background .25s, color .25s;
+    }
+    .sq svg{ width:12px; height:12px; fill:none; stroke:currentColor; stroke-width:1.2; }
+    a:hover .sq, .sq:hover{ background:var(--ink); color:var(--paper); }
+
+    /* 黒いラベル */
+    .tag{
+      display:inline-block;
+      background:var(--ink); color:var(--paper);
+      font-family:var(--sans); font-weight:500;
+      font-size:clamp(15px, 1.8vw, 22px); line-height:1.45;
+      padding:4px 10px 5px;
+    }
+
+    /* 写真枠（差し替え：.photo に class="has-photo" と style="background-image:url('photo.jpg')" を追加） */
+    .photo{
+      position:relative; overflow:hidden;
+      background:linear-gradient(150deg, #c9d2d7, #8d9aa2 55%, #5f6c74);
+      background-size:cover; background-position:center;
+    }
+    .photo::after{
+      content:""; position:absolute; inset:0;
+      background-image:radial-gradient(circle, rgba(255,255,255,.35) 0 .9px, transparent 1.3px);
+      background-size:4px 4px;
+    }
+    .photo.has-photo{ filter:grayscale(1) contrast(1.05); }
+    .photo .ph-note{
+      position:absolute; right:10px; bottom:8px; z-index:1;
+      font-family:var(--label); font-size:9px; letter-spacing:.2em; color:rgba(255,255,255,.85);
+    }
+    .photo.has-photo .ph-note{ display:none; }
 
     /* ===== Header ===== */
     .header{
-      position:fixed; inset:0 0 auto 0; z-index:50;
-      display:flex; align-items:center; justify-content:space-between;
+      position:fixed; inset:0 0 auto 0; z-index:60;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding:calc(14px + env(safe-area-inset-top, 0px)) var(--gutter) 14px;
-      color:var(--white);
-      mix-blend-mode:difference;
       pointer-events:none;
     }
     .header > *{ pointer-events:auto; }
-    .logo{
-      font-family:var(--en); font-weight:900; font-size:15px;
-      letter-spacing:.18em; text-decoration:none;
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      text-decoration:none;
+      background:var(--paper);
+      padding:10px 14px;
     }
-    .header-cta{
-      font-family:var(--en); font-weight:700; font-size:12px; letter-spacing:.16em;
-      text-decoration:none; padding:8px 16px; border:1px solid currentColor; border-radius:999px;
-      transition:background .25s, color .25s;
+    .brand-name{ font-family:var(--label); font-weight:700; font-size:14px; letter-spacing:.14em; }
+    .brand-sub{ font-family:var(--label); font-weight:700; font-size:8px; letter-spacing:.16em; line-height:1.35; color:var(--gray); }
+    .nav{ display:flex; align-items:center; gap:8px; }
+    .nav-btn{
+      display:inline-grid; place-items:center;
+      height:38px; padding:0 22px;
+      font-family:var(--label); font-weight:700; font-size:11px; letter-spacing:.14em;
+      text-decoration:none;
+      border:1px solid var(--ink);
+      transition:filter .25s;
     }
-    .header-cta:hover{ background:var(--white); color:var(--ink); }
+    .nav-btn:hover{ filter:brightness(1.12); }
+    .nav-btn.entry{ background:var(--blue); border-color:var(--blue); color:var(--paper); }
+    .nav-btn.about{ background:var(--steel); border-color:var(--steel); color:var(--paper); }
+    .menu-btn{
+      width:54px; height:38px; margin-left:10px;
+      display:grid; place-content:center; gap:6px;
+      background:var(--paper); border:0; cursor:pointer; padding:0;
+    }
+    .menu-btn span{ display:block; width:36px; height:2px; background:var(--ink); transition:transform .3s, opacity .3s; }
+    .menu-open .menu-btn span:nth-child(1){ transform:translateY(8px) rotate(45deg); }
+    .menu-open .menu-btn span:nth-child(2){ opacity:0; }
+    .menu-open .menu-btn span:nth-child(3){ transform:translateY(-8px) rotate(-45deg); }
+    @media (max-width:760px){
+      .nav-btn.about{ display:none; }
+      .nav-btn{ padding:0 14px; height:34px; font-size:10px; }
+      .brand{ padding:8px 10px; }
+      .brand-sub{ display:none; }
+      .menu-btn{ margin-left:2px; }
+    }
+
+    .menu{
+      position:fixed; inset:0; z-index:55;
+      background:var(--mist);
+      padding:calc(110px + env(safe-area-inset-top, 0px)) var(--gutter) 40px;
+      overflow-y:auto;
+      opacity:0; visibility:hidden; transition:opacity .35s, visibility .35s;
+    }
+    .menu-open .menu{ opacity:1; visibility:visible; }
+    .menu ul{ list-style:none; margin:0 auto; padding:0; max-width:var(--max); display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); column-gap:40px; }
+    .menu a{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding:18px 0; border-bottom:1px solid var(--rule); text-decoration:none;
+    }
+    .menu .en{ font-family:var(--wide); font-weight:300; font-size:clamp(18px, 2.2vw, 26px); letter-spacing:.04em; display:block; line-height:1.3; }
+    .menu .jp{ font-size:12px; font-weight:700; }
 
     /* ===== Hero ===== */
     .hero{
       position:relative;
-      min-height:100svh;
-      background:var(--ink);
-      color:var(--white);
-      display:flex; flex-direction:column; justify-content:flex-end;
-      padding:120px 0 40px;
+      min-height:max(640px, 100svh);
       overflow:hidden;
+      background:var(--paper);
+      display:grid;
+      place-items:center;
     }
-    .hero-bird{
-      position:absolute; right:-6vw; top:8vh;
-      width:min(62vw, 720px); height:auto;
-      opacity:.95;
+    /* 紙面のトンネル（CSS 3D） */
+    .tunnel{
+      position:absolute; inset:0;
+      perspective:520px; perspective-origin:50% 46%;
+      overflow:hidden;
+      filter:blur(.6px);
     }
-    .hero-bird path{ fill:var(--accent); }
-    .hero-copy{
-      position:relative;
-      font-weight:900;
-      font-size:clamp(30px, 4.6vw, 72px);
-      line-height:1.28;
-      letter-spacing:.02em;
-      margin:0 0 .5em;
+    .wall{
+      position:absolute;
+      display:grid; gap:22px;
+      padding:22px;
     }
-    .hero-copy > span{ display:block; }
-    .hero-copy .l2{ padding-left:1em; }
+    .wall.floor{ left:0; right:0; bottom:0; height:2400px; transform-origin:50% 100%; transform:rotateX(90deg); grid-template-columns:repeat(4, 1fr); }
+    .wall.ceil { left:0; right:0; top:0; height:2400px; transform-origin:50% 0; transform:rotateX(-90deg); grid-template-columns:repeat(4, 1fr); }
+    .wall.left { left:0; top:0; bottom:0; width:2400px; transform-origin:0 50%; transform:rotateY(90deg); grid-template-rows:repeat(3, 1fr); grid-auto-flow:column; grid-auto-columns:300px; }
+    .wall.right{ right:0; top:0; bottom:0; width:2400px; transform-origin:100% 50%; transform:rotateY(-90deg); grid-template-rows:repeat(3, 1fr); grid-auto-flow:column; grid-auto-columns:300px; }
+    .sheet{
+      background:#fff;
+      overflow:hidden;
+      writing-mode:vertical-rl;
+      font-family:var(--serif); font-size:11px; line-height:1.55; letter-spacing:.06em;
+      color:#94a1a8;
+      padding:10px;
+      box-shadow:0 0 0 1px #edf1f3;
+    }
+    .sheet b{ font-size:22px; color:#56636b; font-weight:700; margin-left:.4em; }
+    .sheet.g{ background:var(--grad); box-shadow:none; }
+    .tunnel-fade{
+      position:absolute; inset:0; pointer-events:none;
+      background:radial-gradient(ellipse 34% 30% at 50% 46%, #fff 30%, rgba(255,255,255,.75) 55%, rgba(255,255,255,0) 100%);
+    }
+
+    .hero-center{
+      position:relative; z-index:2;
+      text-align:center;
+      padding:110px var(--gutter) 230px;
+    }
     .hero-en{
-      position:relative;
-      font-family:var(--en); font-weight:700;
-      font-size:clamp(13px, 1.6vw, 18px);
-      letter-spacing:.2em; line-height:1.7;
-      color:rgba(255,255,255,.72);
-      margin:0 0 clamp(32px, 6vh, 64px);
+      font-family:var(--label); font-weight:700;
+      font-size:clamp(10px, 1.1vw, 13px); letter-spacing:.24em; line-height:1.8;
+      margin:0 0 24px;
     }
-    .hero-en em{ font-style:normal; color:var(--accent); }
-    .hero-foot{
-      position:relative;
-      display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:24px;
-      border-top:1px solid rgba(255,255,255,.2);
-      padding-top:24px;
-    }
-    .hero-logo{
-      font-family:var(--en); font-weight:900;
-      font-size:clamp(28px, 5vw, 56px);
-      letter-spacing:.06em; line-height:1;
-      margin:0 0 10px;
-    }
-    .hero-lead{ margin:0; font-size:clamp(15px, 1.6vw, 18px); font-weight:500; }
-
-    .btn{
-      display:inline-flex; align-items:center; gap:14px;
-      background:var(--accent); color:var(--white);
-      font-weight:700; font-size:15px; letter-spacing:.08em; text-decoration:none;
-      padding:18px 28px; border-radius:999px;
-      transition:transform .25s, background .25s;
-    }
-    .btn:hover{ transform:translateY(-2px); background:#e83c10; }
-    .btn .arrow{ display:inline-block; transition:transform .25s; font-family:var(--en); }
-    .btn:hover .arrow{ transform:translateX(4px); }
-    .btn.lg{ font-size:clamp(16px, 2vw, 20px); padding:22px 36px; }
-
-
-    /* ===== Marquee ===== */
-    .marquee{
-      background:var(--accent); color:var(--white);
-      overflow:hidden; white-space:nowrap;
-      font-family:var(--en); font-weight:900;
-      font-size:clamp(20px, 3vw, 36px); letter-spacing:.06em;
-      padding:14px 0;
-    }
-    .marquee-track{ display:inline-flex; animation:marquee 32s linear infinite; }
-    .marquee-track span{ padding-right:1.4em; }
-    @keyframes marquee{ to{ transform:translateX(-50%); } }
-
-    /* ===== Section common ===== */
-    .section{ padding:clamp(88px, 14vw, 180px) 0; position:relative; }
-    .section + .section{ border-top:1px solid var(--line); }
-    .label{
-      display:flex; align-items:center; gap:14px;
-      font-family:var(--en); font-weight:700; font-size:12px; letter-spacing:.22em;
-      color:var(--accent);
+    .hero-en em{ font-style:normal; color:var(--blue); }
+    .hero-copy{
+      font-family:var(--serif); font-weight:600;
+      font-size:clamp(30px, 5.4vw, 78px);
+      line-height:1.38; letter-spacing:.02em;
       margin:0 0 28px;
     }
-    .label .num{ color:var(--ink); }
-    .label::after{ content:""; width:40px; height:1px; background:currentColor; }
-    .label .jp{ font-family:var(--jp); letter-spacing:.12em; color:var(--muted); font-weight:500; }
-
-    .h2{
-      font-weight:900;
-      font-size:clamp(28px, 4.6vw, 56px);
-      line-height:1.45;
-      letter-spacing:.03em;
-      margin:0 0 clamp(32px, 5vw, 56px);
-    }
-    .h2 .hl{ color:var(--accent); }
+    .hero-copy > span{ display:block; }
     .ib{ display:inline-block; }
-    .body{ max-width:680px; font-size:clamp(15px, 1.5vw, 17px); }
+    .hero-lead{ font-weight:700; font-size:clamp(14px, 1.4vw, 16px); margin:0 0 26px; }
 
-    .split{
-      display:grid; grid-template-columns:1fr; gap:clamp(24px, 4vw, 64px);
+    .btn{
+      display:inline-flex; align-items:center; gap:18px;
+      text-decoration:none;
+      font-weight:700; font-size:15px; letter-spacing:.08em;
+      background:var(--paper);
+      border:1px solid var(--ink);
+      padding:0 0 0 26px;
+      transition:background .25s, color .25s;
     }
-    @media (min-width:900px){
-      .split{ grid-template-columns:5fr 7fr; align-items:start; }
-      .split .sticky{ position:sticky; top:96px; }
+    .btn .sq{ width:52px; height:52px; border-width:0 0 0 1px; }
+    .btn:hover{ background:var(--ink); color:var(--paper); }
+    .btn:hover .sq{ background:var(--blue); color:var(--paper); border-color:var(--ink); }
+
+    .hero-v{
+      position:absolute; z-index:2;
+      left:clamp(10px, 1.6vw, 24px); bottom:118px;
+      writing-mode:vertical-rl;
+      font-family:var(--wide); font-weight:200;
+      font-size:clamp(30px, 4.4vw, 64px); line-height:1;
+      letter-spacing:.02em;
+      border-left:1px solid var(--ink);
+      padding-left:6px;
+      margin:0;
+    }
+    .hero-h{
+      position:absolute; z-index:2;
+      left:clamp(10px, 1.6vw, 24px); bottom:28px;
+      font-family:var(--wide); font-weight:200;
+      font-size:clamp(34px, 5.4vw, 80px); line-height:1;
+      letter-spacing:.01em;
+      border-bottom:1px solid var(--ink);
+      padding-bottom:6px;
+      margin:0;
+      white-space:nowrap;
+    }
+    .pickup{
+      position:absolute; z-index:3;
+      right:-30px; bottom:-40px;
+      width:min(54vw, 760px);
+      background:linear-gradient(120deg, #e3eaee, #f6f9fa);
+      transform:rotate(-4deg);
+      transform-origin:100% 100%;
+      padding:18px 60px 60px 22px;
+      box-shadow:0 24px 60px rgba(17,20,23,.18);
+      text-decoration:none;
+      display:block;
+      transition:transform .4s;
+    }
+    .pickup:hover{ transform:rotate(-3deg) translateY(-6px); }
+    .pickup-head{
+      display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+      font-family:var(--label); font-weight:700; font-size:10px; letter-spacing:.2em;
+      margin-bottom:12px;
+    }
+    .pickup-body{
+      display:grid; grid-template-columns:1fr 1.1fr; gap:22px;
+      border:1px solid #9aa6ad; padding:20px;
+    }
+    .pickup .photo{ min-height:180px; background:var(--grad); }
+    .pickup .photo::after{ background-size:5px 5px; background-image:radial-gradient(circle, rgba(255,255,255,.55) 0 1px, transparent 1.4px); }
+    .pickup h2{ font-family:var(--serif); font-weight:600; font-size:clamp(18px, 1.9vw, 26px); line-height:1.45; margin:0 0 10px; }
+    .pickup p{ font-size:13px; line-height:1.9; margin:0; }
+
+    @media (max-width:900px){
+      .hero{ display:block; min-height:0; }
+      .hero-center{ padding:130px var(--gutter) 40px; }
+      .hero-v{ display:none; }
+      .hero-h{ position:relative; left:auto; bottom:auto; margin:0 var(--gutter) 28px; display:inline-block; font-size:clamp(26px, 8.4vw, 60px); }
+      .pickup{ position:relative; right:auto; bottom:auto; width:auto; margin:0 var(--gutter) 40px; transform:rotate(-2deg); padding:16px 16px 18px; }
+      .pickup-body{ grid-template-columns:1fr; padding:14px; gap:14px; }
+      .pickup .photo{ min-height:140px; }
     }
 
+    /* ===== Section common ===== */
+    .section{ position:relative; padding-block:clamp(80px, 11vw, 150px); }
+    .bordered{ border-top:1px solid var(--rule); }
+    .ttl{ margin:0 0 clamp(36px, 5vw, 64px); }
+    .ttl .en{
+      display:block;
+      font-family:var(--wide); font-weight:200;
+      font-size:clamp(40px, 8.6vw, 120px); line-height:1;
+      letter-spacing:0;
+      margin-left:-.04em;
+    }
+    .ttl .jp{
+      display:inline-block;
+      font-family:var(--sans); font-weight:700; font-size:13px; letter-spacing:.1em;
+      border-bottom:1px solid var(--ink);
+      padding-bottom:2px; margin-top:10px;
+    }
+    .lead-serif{
+      font-family:var(--serif); font-weight:600;
+      font-size:clamp(22px, 3vw, 38px); line-height:1.6; letter-spacing:.03em;
+      text-wrap:balance;
+      margin:0 0 28px;
+    }
+    .body{ max-width:640px; }
+
+    /* ===== About ===== */
+    .about-grid{
+      display:grid; gap:clamp(24px, 3.4vw, 48px);
+      grid-template-columns:1fr;
+    }
+    @media (min-width:900px){ .about-grid{ grid-template-columns:1fr 1.15fr; align-items:end; } }
+    .about-grid > *{ min-width:0; }
+    .grad-block{ background:var(--grad); min-height:clamp(180px, 26vw, 360px); }
+    .card{
+      position:relative;
+      border:1px solid var(--rule);
+      background:linear-gradient(120deg, #f7fafb, #e7eef1);
+      padding:clamp(22px, 3vw, 36px) clamp(20px, 3vw, 40px) clamp(56px, 6vw, 72px);
+    }
+    .card .tag{ margin-bottom:20px; }
+    .card .corner{ position:absolute; right:-1px; bottom:-1px; width:58px; height:58px; }
+    .about-cards{
+      display:grid; gap:clamp(16px, 2vw, 28px);
+      grid-template-columns:1fr;
+      margin-top:clamp(28px, 4vw, 48px);
+    }
+    @media (min-width:760px){ .about-cards{ grid-template-columns:repeat(3, 1fr); } }
+    .mini{
+      position:relative; border:1px solid var(--rule); background:var(--paper);
+      padding:22px 22px 70px;
+      min-width:0;
+    }
+    .mini .tag{ font-size:clamp(15px, 1.5vw, 19px); margin:0 0 14px; }
+    .mini p{ font-size:14px; line-height:1.9; }
+    .mini .corner{ position:absolute; right:-1px; bottom:-1px; width:52px; height:52px; }
+
+    /* ===== Strength ===== */
+    .strength{ background:var(--mist); overflow:hidden; }
+    .strength-bg{
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+      writing-mode:vertical-rl;
+      font-family:var(--serif); font-weight:700;
+      font-size:clamp(60px, 9vw, 130px); line-height:1.3;
+      color:rgba(17,20,23,.06);
+      filter:blur(5px);
+      overflow:hidden;
+      padding:40px;
+    }
+    .strength .wrap{ position:relative; z-index:1; }
+    .strength-head{
+      display:grid; gap:20px 48px; grid-template-columns:1fr;
+      align-items:end;
+      margin-bottom:clamp(36px, 5vw, 56px);
+    }
+    @media (min-width:900px){ .strength-head{ grid-template-columns:auto 1fr; } .strength-head .ttl{ margin:0; } }
+    .areas{
+      list-style:none; margin:0; padding:0;
+      display:grid; gap:clamp(14px, 2vw, 26px);
+      grid-template-columns:1fr;
+    }
+    @media (min-width:760px){ .areas{ grid-template-columns:repeat(2, 1fr); } }
+    .area{
+      position:relative;
+      display:grid; grid-template-columns:minmax(0, 1fr) 40%;
+      min-height:150px;
+      border:1px solid var(--rule);
+      background:var(--paper);
+      min-width:0;
+    }
+    .area-txt{ padding:18px 0; display:flex; flex-direction:column; justify-content:center; gap:4px; min-width:0; }
+    .area-num{
+      display:inline-block; align-self:flex-start;
+      background:var(--ink); color:var(--paper);
+      font-family:var(--wide); font-weight:300; font-size:24px; line-height:1;
+      padding:8px 8px 6px;
+    }
+    .area-label{
+      align-self:flex-start;
+      font-weight:700; font-size:clamp(14px, 1.5vw, 17px); line-height:1.6;
+      border:1px solid var(--rule); border-left:0;
+      background:var(--paper);
+      padding:4px 10px;
+      margin-right:-30%;
+      position:relative; z-index:2;
+    }
+    .area .photo{ min-height:100%; }
+    .area .corner{ position:absolute; right:-1px; bottom:-1px; width:52px; height:52px; z-index:3; }
+    .area.wide{ grid-column:1 / -1; }
+    .a1 .photo{ background:linear-gradient(150deg, #d5dde1, #8796a0); }
+    .a2 .photo{ background:var(--grad); }
+    .a3 .photo{ background:linear-gradient(160deg, #bfc9ce, #6d7a83); }
+    .a4 .photo{ background:var(--grad-soft); }
+    .a5 .photo{ background:linear-gradient(140deg, #0a92e3, #62e6d8); }
     .quote{
-      font-weight:900;
-      font-size:clamp(20px, 2.6vw, 30px);
-      line-height:1.6;
-      margin:clamp(40px, 6vw, 72px) 0 0;
-      padding-left:24px;
-      border-left:4px solid var(--accent);
+      margin:clamp(48px, 6vw, 72px) 0 0;
+      font-family:var(--serif); font-weight:600;
+      font-size:clamp(22px, 3.2vw, 40px); line-height:1.6;
+      text-align:center;
     }
-
-    /* ===== Strength list ===== */
-    .areas{ list-style:none; margin:clamp(36px, 5vw, 56px) 0 0; padding:0; counter-reset:area; }
-    .areas li{
-      counter-increment:area;
-      display:grid; grid-template-columns:56px 1fr; align-items:baseline; gap:8px;
-      padding:20px 0;
-      border-top:1px solid var(--line);
-      font-weight:700; font-size:clamp(16px, 1.9vw, 21px); line-height:1.6;
-      transition:padding .3s, color .3s;
-    }
-    .areas li:last-child{ border-bottom:1px solid var(--line); }
-    .areas li::before{
-      content:counter(area, decimal-leading-zero);
-      font-family:var(--en); font-weight:700; font-size:13px; color:var(--accent); letter-spacing:.1em;
-    }
-    .areas li:hover{ padding-left:10px; }
+    .quote small{ display:block; font-family:var(--sans); font-weight:700; font-size:clamp(14px, 1.5vw, 17px); margin-top:8px; }
 
     /* ===== Field ===== */
-    .field{ background:var(--ink); color:var(--white); }
-    .field .label .num{ color:var(--white); }
-    .field .label .jp{ color:rgba(255,255,255,.6); }
-    .field .body{ color:rgba(255,255,255,.86); }
+    .field{
+      background:linear-gradient(170deg, #b9c6cb 0%, #dbe4e7 45%, #9fb0b6 100%);
+      border-block:1px solid var(--rule);
+    }
+    .field-grid{ display:grid; gap:36px; grid-template-columns:1fr; }
+    @media (min-width:1000px){ .field-grid{ grid-template-columns:340px minmax(0, 1fr); } }
+    .field-intro{ min-width:0; }
+    .field-intro p{ font-size:14px; }
     .badge{
-      display:inline-block;
-      background:var(--accent); color:var(--white);
-      font-weight:700; font-size:clamp(15px, 1.7vw, 19px); line-height:1.6;
-      padding:14px 20px; margin:8px 0 0;
+      display:block;
+      background:var(--paper); border:1px solid var(--rule);
+      padding:16px 18px; margin-top:22px;
+      font-weight:700; font-size:14px; line-height:1.8;
     }
-    .badge b{ font-family:var(--en); font-size:1.3em; margin-right:.15em; }
-    .gallery{
-      display:grid; gap:12px;
-      grid-template-columns:repeat(2, 1fr);
-      margin:clamp(48px, 7vw, 88px) 0;
+    .badge b{ font-family:var(--wide); font-weight:300; font-size:30px; display:block; line-height:1.2; color:var(--blue); }
+    .slider-wrap{ min-width:0; }
+    .slider-ctrl{ display:flex; justify-content:flex-end; gap:22px; margin-bottom:22px; }
+    .slider-ctrl button{
+      width:68px; height:38px; display:grid; place-items:center;
+      background:var(--ink); color:var(--paper); border:0; cursor:pointer;
+      transition:background .25s;
     }
-    @media (min-width:900px){
-      .gallery{ grid-template-columns:repeat(4, 1fr); grid-auto-rows:200px; }
-      .gallery .g1{ grid-column:span 2; grid-row:span 2; }
+    .slider-ctrl button:hover{ background:var(--blue); }
+    .slider-ctrl svg{ width:34px; height:12px; fill:none; stroke:currentColor; stroke-width:1.2; }
+    .slider{
+      display:flex; gap:clamp(16px, 3vw, 54px);
+      overflow-x:auto; scroll-snap-type:x mandatory;
+      scrollbar-width:none;
+      padding-bottom:4px;
     }
-    .ph{
-      position:relative; overflow:hidden;
-      min-height:160px; aspect-ratio:auto;
-      background:#222;
-      display:flex; align-items:flex-end;
-      padding:16px;
+    .slider::-webkit-scrollbar{ display:none; }
+    .work{
+      flex:0 0 clamp(240px, 26vw, 334px);
+      scroll-snap-align:start;
+      background:var(--paper); border:1px solid var(--rule);
+      padding:15px 15px 12px;
     }
-    /* 写真差し替え：.ph に style="background-image:url(...)" を指定してください */
-    .ph{ background-size:cover; background-position:center; }
-    .ph::before{
-      content:""; position:absolute; inset:0;
-      background:
-        repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 12px, transparent 12px 24px),
-        linear-gradient(160deg, var(--c1, #2a2a2a), var(--c2, #161616));
-      transition:transform .6s;
+    .work .photo{ aspect-ratio:305 / 350; max-width:100%; }
+    .work-foot{ display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin-top:14px; }
+    .work-title{
+      font-family:var(--serif); font-weight:600; font-size:clamp(18px, 1.9vw, 24px); line-height:1.4;
+      border-bottom:1px solid var(--ink); padding-bottom:2px;
     }
-    .ph.has-photo::before{ background:linear-gradient(to top, rgba(0,0,0,.6), transparent 55%); }
-    .ph:hover::before{ transform:scale(1.04); }
-    .ph span{
-      position:relative;
-      font-weight:700; font-size:14px; letter-spacing:.08em;
-    }
-    .ph small{
-      display:block; font-family:var(--en); font-size:11px; letter-spacing:.2em; color:var(--accent); font-weight:700;
-    }
-    .g1{ --c1:#3a2a24; --c2:#1a1412; }
-    .g2{ --c1:#24303a; --c2:#121a20; }
-    .g3{ --c1:#2e2a3a; --c2:#16141c; }
-    .g4{ --c1:#2a3a2e; --c2:#121a14; }
-    .g5{ --c1:#3a3424; --c2:#1c1912; }
+    .work-en{ display:block; font-family:var(--label); font-weight:700; font-size:9px; letter-spacing:.2em; color:var(--gray); margin-bottom:6px; }
+    .work .sq{ width:34px; height:34px; }
+    .w1 .photo{ background:linear-gradient(160deg, #e7eef1, #8a99a2); }
+    .w2 .photo{ background:var(--grad); }
+    .w3 .photo{ background:linear-gradient(150deg, #cfd7db, #5f6c74); }
+    .w4 .photo{ background:var(--grad-soft); }
+    .w5 .photo{ background:linear-gradient(150deg, #b6c2c8, #44525b); }
     .field-close{
-      font-weight:700; font-size:clamp(18px, 2.2vw, 26px); line-height:1.7; margin:0;
+      font-family:var(--serif); font-weight:600;
+      font-size:clamp(18px, 2.2vw, 26px); line-height:1.7;
+      margin:clamp(40px, 5vw, 64px) 0 0;
     }
 
     /* ===== People ===== */
+    .people{
+      background:linear-gradient(90deg, #f6f9fa, #e5edf0);
+      overflow:hidden;
+      padding-bottom:clamp(80px, 10vw, 140px);
+    }
+    .people-v{
+      position:absolute; left:clamp(12px, 1.8vw, 26px); top:clamp(40px, 6vw, 70px); z-index:6;
+      writing-mode:vertical-rl;
+      font-family:var(--serif); font-weight:600;
+      font-size:clamp(26px, 3vw, 42px); line-height:1.1; letter-spacing:.06em;
+      margin:0;
+    }
+    .people-stage{
+      position:relative;
+      height:clamp(560px, 62vw, 860px);
+    }
+    .people-word{
+      position:absolute; left:0; right:0; top:50%; transform:translateY(-50%);
+      display:flex; justify-content:space-between; align-items:center;
+      font-family:var(--wide); font-weight:200;
+      font-size:clamp(46px, 11vw, 160px); line-height:1;
+      padding-inline:clamp(4px, 1vw, 16px);
+      pointer-events:none;
+      z-index:1;
+      white-space:nowrap;
+      margin:0;
+    }
+    .p-card{
+      position:absolute;
+      width:clamp(220px, 40vw, 600px);
+      aspect-ratio:600 / 460; max-width:100%;
+      z-index:2;
+      box-shadow:0 20px 50px rgba(17,20,23,.14);
+      display:flex; align-items:flex-end;
+      padding:clamp(14px, 2vw, 24px);
+    }
+    .p-card .tag{ position:relative; z-index:1; margin:0; }
+    .p-card.c1{ left:14%; top:2%; transform:rotate(-12deg); width:clamp(200px, 36vw, 540px); background:linear-gradient(150deg, #d9e0e3, #79868e); }
+    .p-card.c2{ left:28%; top:24%; transform:rotate(2deg); background:var(--grad); z-index:4; }
+    .p-card.c3{ left:44%; top:58%; transform:rotate(14deg); width:clamp(200px, 36vw, 540px); background:linear-gradient(150deg, #c5ced2, #4f5d66); z-index:3; }
+    .p-card .photo{ position:absolute; inset:0; background:inherit; }
     .roles{
-      display:flex; flex-wrap:wrap; gap:10px;
-      list-style:none; padding:0; margin:0 0 clamp(36px, 5vw, 56px);
+      position:absolute; right:clamp(0px, 2vw, 30px); top:62%; z-index:5;
+      list-style:none; margin:0; padding:0;
+      display:flex; flex-direction:column; align-items:flex-end; gap:6px;
     }
     .roles li{
-      font-weight:700; font-size:clamp(14px, 1.6vw, 17px);
-      padding:10px 20px; border:1.5px solid var(--ink); border-radius:999px;
-      background:var(--paper);
-      transition:background .25s, color .25s, border-color .25s;
+      background:var(--ink); color:var(--paper);
+      font-weight:500; font-size:clamp(12px, 1.4vw, 16px); letter-spacing:.06em;
+      padding:6px 14px;
     }
-    .roles li:hover{ background:var(--ink); color:var(--white); }
-    .roles li.all{ background:var(--accent); border-color:var(--accent); color:var(--white); }
+    .roles li.all{ background:var(--blue); }
+    .people-text{
+      display:grid; gap:24px; grid-template-columns:1fr;
+      margin-top:clamp(40px, 5vw, 64px);
+    }
+    @media (min-width:900px){ .people-text{ grid-template-columns:1fr 1fr; align-items:start; } }
+    @media (max-width:759px){
+      .people-stage{ height:auto; display:grid; gap:14px; padding:70px var(--gutter) 0; }
+      .people-word{ position:relative; top:auto; transform:none; justify-content:flex-start; font-size:clamp(40px, 13vw, 80px); padding-left:48px; }
+      .p-card, .p-card.c1, .p-card.c2, .p-card.c3{ position:relative; left:auto; top:auto; width:auto; aspect-ratio:16 / 9; transform:rotate(-2deg); }
+      .p-card.c2{ transform:rotate(1.5deg); }
+      .roles{ position:relative; right:auto; top:auto; align-items:flex-start; flex-direction:row; flex-wrap:wrap; margin-top:12px; }
+    }
 
     /* ===== Growth ===== */
-    .growth{ background:var(--paper-2); }
-    .steps{
-      list-style:none; margin:clamp(36px, 5vw, 56px) 0; padding:0;
-      display:grid; gap:12px;
-      grid-template-columns:1fr;
+    .rows{ list-style:none; margin:0; padding:0; border-top:1px solid var(--rule); }
+    .rows li{
+      display:grid; grid-template-columns:clamp(56px, 8vw, 110px) minmax(0, 1fr) auto; align-items:center; gap:16px;
+      padding:clamp(18px, 2.4vw, 30px) clamp(0px, 2vw, 40px) clamp(18px, 2.4vw, 30px) clamp(0px, 2vw, 54px);
+      border-bottom:1px solid var(--rule);
+      transition:background .3s;
     }
-    @media (min-width:640px){ .steps{ grid-template-columns:repeat(2, 1fr); } }
-    @media (min-width:1000px){ .steps{ grid-template-columns:repeat(5, 1fr); } }
-    .steps li{
-      background:var(--paper);
-      padding:22px 20px 24px;
-      font-weight:700; line-height:1.7;
-      font-size:15px;
-      border-top:3px solid var(--ink);
-      transition:border-color .25s, transform .25s;
+    .rows li:hover{ background:var(--mist); }
+    .rows .n{ font-family:var(--wide); font-weight:200; font-size:clamp(24px, 3vw, 40px); line-height:1; color:var(--blue); }
+    .rows .t{ font-weight:700; font-size:clamp(15px, 1.6vw, 18px); line-height:1.7; }
+    .growth-intro{ display:grid; gap:12px 48px; grid-template-columns:1fr; margin-bottom:clamp(36px, 5vw, 56px); }
+    @media (min-width:900px){ .growth-intro{ grid-template-columns:1fr 1fr; align-items:end; } }
+    .note{
+      display:grid; gap:24px; grid-template-columns:1fr;
+      margin-top:clamp(40px, 5vw, 64px);
     }
-    .steps li:hover{ border-color:var(--accent); transform:translateY(-3px); }
-    .steps .step-n{
-      display:block; font-family:var(--en); font-weight:900; font-size:32px; line-height:1;
-      color:var(--accent); margin-bottom:14px;
-    }
-    .note-box{
-      max-width:760px;
-      background:var(--ink); color:var(--white);
-      padding:clamp(24px, 4vw, 40px);
-    }
-    .note-box p{ font-size:15px; }
-    .note-box strong{ color:var(--accent); }
+    @media (min-width:900px){ .note{ grid-template-columns:minmax(0, 1fr) 1.2fr; align-items:stretch; } }
+    .note .grad-block{ min-height:200px; }
+    .note .card{ padding-bottom:clamp(22px, 3vw, 36px); }
 
     /* ===== Wanted ===== */
+    .wanted{ background:var(--mist); }
     .triad{
-      display:grid; grid-template-columns:1fr; gap:12px;
-      margin:0 0 clamp(48px, 7vw, 80px);
+      display:grid; gap:clamp(14px, 2vw, 26px); grid-template-columns:1fr;
+      margin-bottom:clamp(48px, 6vw, 80px);
     }
     @media (min-width:760px){ .triad{ grid-template-columns:repeat(3, 1fr); } }
-    .triad div{
-      background:var(--white);
-      padding:clamp(24px, 3vw, 36px);
-      border-radius:4px;
+    .triad .mini{ padding-bottom:26px; }
+    .kw{
+      display:block;
+      font-family:var(--serif); font-weight:700;
+      font-size:clamp(34px, 4vw, 54px); line-height:1.2;
+      margin:18px 0 8px;
     }
-    .triad .kw{
-      display:block; font-weight:900; font-size:clamp(30px, 3.6vw, 44px); line-height:1.2; margin-bottom:6px;
-    }
-    .triad .kw-en{
-      display:block; font-family:var(--en); font-weight:700; font-size:11px; letter-spacing:.22em; color:var(--accent);
-      margin-bottom:18px;
-    }
-    .triad .say{ font-weight:700; font-size:16px; line-height:1.7; margin:0; }
-
-    .checks{ list-style:none; padding:0; margin:0 0 clamp(36px, 5vw, 56px); }
-    .checks li{
-      position:relative;
-      padding:16px 0 16px 40px;
-      border-bottom:1px solid var(--line);
-      font-weight:700; font-size:clamp(15px, 1.7vw, 18px); line-height:1.7;
-    }
-    .checks li::before{
-      content:""; position:absolute; left:4px; top:50%;
-      width:18px; height:18px; margin-top:-9px;
-      border-radius:50%; background:var(--accent);
+    .kw-en{ display:block; font-family:var(--label); font-weight:700; font-size:10px; letter-spacing:.22em; color:var(--blue); margin-bottom:12px; }
+    .say{ font-weight:700; font-size:16px; line-height:1.7; margin:0; }
+    .triad .grad-band{ height:8px; background:var(--grad); margin:-22px -22px 0; }
+    .wanted-grid{ display:grid; gap:28px 56px; grid-template-columns:1fr; }
+    @media (min-width:900px){ .wanted-grid{ grid-template-columns:1fr 1.3fr; } }
+    .wanted-grid > *{ min-width:0; }
+    .wanted .rows{ background:var(--paper); }
+    .wanted .rows li{ grid-template-columns:28px minmax(0, 1fr); padding-left:clamp(14px, 2vw, 28px); }
+    .wanted .rows li::before{
+      content:""; width:14px; height:14px; border:1px solid var(--ink); background:var(--grad);
     }
 
     /* ===== Future ===== */
-    .future{
-      background:var(--accent); color:var(--white);
-      overflow:hidden;
+    .future{ overflow:hidden; background:var(--paper); }
+    .future-panel{
+      background:var(--grad);
+      padding:clamp(36px, 6vw, 88px) clamp(20px, 5vw, 80px);
+      border:1px solid var(--rule);
     }
-    .future .label, .future .label .num{ color:var(--white); }
-    .future .label .jp{ color:rgba(255,255,255,.8); }
-    .future .h2 .hl{ color:var(--ink); }
     .future-q{
       display:flex; flex-wrap:wrap; gap:8px 28px;
-      font-weight:900; font-size:clamp(18px, 2.4vw, 28px);
-      margin:clamp(32px, 5vw, 48px) 0;
+      font-family:var(--serif); font-weight:600;
+      font-size:clamp(18px, 2.4vw, 28px);
+      margin:clamp(28px, 4vw, 40px) 0;
     }
     .future-closing{
-      margin-top:clamp(56px, 8vw, 104px);
-      font-weight:900; font-size:clamp(26px, 5vw, 64px); line-height:1.4;
+      margin:clamp(56px, 8vw, 100px) 0 0;
+      font-family:var(--serif); font-weight:600;
+      font-size:clamp(28px, 5vw, 70px); line-height:1.38;
+      text-align:center;
     }
     .future-closing > span{ display:block; }
-    .future-closing .l2{ padding-left:1em; }
-    .future-invite{
-      font-weight:700; font-size:clamp(17px, 2vw, 22px); margin-top:1.4em;
-    }
+    .future-invite{ text-align:center; font-weight:700; font-size:clamp(16px, 1.8vw, 20px); margin:22px 0 0; }
 
-    /* ===== Entry ===== */
-    .entry{ background:var(--ink); color:var(--white); text-align:center; }
-    .entry .label{ justify-content:center; }
-    .entry .label::after{ display:none; }
-    .entry .label .num{ color:var(--white); }
-    .entry .label .jp{ color:rgba(255,255,255,.6); }
-    .entry-title{
-      font-family:var(--en); font-weight:900;
-      font-size:clamp(56px, 14vw, 180px); line-height:.9; letter-spacing:.01em;
-      margin:0 0 .3em;
+    /* ===== Recruit ===== */
+    .recruit{
+      background:linear-gradient(115deg, #7fbaf0 0%, #a6d2f5 45%, #a3e2dc 75%, #95c8f2 100%);
+      border-block:1px solid var(--rule);
     }
-    .entry-title .dot{ color:var(--accent); }
-    .entry .body{ margin:0 auto 40px; color:rgba(255,255,255,.86); }
+    .recruit-links{
+      list-style:none; margin:0; padding:0;
+      display:grid; gap:28px 40px; grid-template-columns:1fr;
+      max-width:760px;
+    }
+    .recruit-links a{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+      text-decoration:none;
+      border-bottom:1px solid var(--rule);
+      font-family:var(--serif); font-weight:600;
+      font-size:clamp(18px, 2.4vw, 28px); line-height:1.6;
+    }
+    .recruit-links a span:first-child{ padding-bottom:10px; }
+    .recruit-links .sq{ width:48px; height:48px; margin-bottom:-1px; }
+    .recruit .body{ margin-bottom:clamp(36px, 5vw, 56px); font-weight:500; }
 
     /* ===== Footer ===== */
-    .footer{
-      background:var(--ink); color:rgba(255,255,255,.7);
-      border-top:1px solid rgba(255,255,255,.12);
-      padding:40px 0 calc(40px + env(safe-area-inset-bottom));
-      font-size:13px; line-height:1.8;
-    }
+    .footer{ background:var(--paper); padding:56px 0 calc(48px + env(safe-area-inset-bottom, 0px)); }
     .footer .wrap{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:20px; }
-    .footer-name{ color:var(--white); font-weight:700; font-size:15px; margin:0; }
-    .footer small{ font-family:var(--en); letter-spacing:.12em; }
+    .footer-name{ font-weight:700; font-size:14px; margin:0; border-bottom:1px solid var(--ink); display:inline-block; }
+    .footer-sub{ font-size:12px; color:var(--gray); margin:6px 0 0; }
+    .footer small{ font-family:var(--label); font-weight:700; font-size:9px; letter-spacing:.16em; }
 
-    /* ===== Reveal ===== */
-    /* 初期表示で画面外にある要素だけを隠し、スクロールで表示（画面内の要素は最初から見える） */
-    .rv.wait{ opacity:0; transform:translateY(24px); }
-    .rv.go{ transition:opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
-    .rv.go.d1{ transition-delay:.1s; }
-    .rv.go.d2{ transition-delay:.2s; }
-    .rv.go.d3{ transition-delay:.3s; }
+    /* ===== Motion ===== */
+    .rv.wait{ opacity:0; transform:translateY(26px); }
+    .rv.go{ transition:opacity .9s ease, transform 1s cubic-bezier(.2,.7,.2,1); }
+    .rv.go.d1{ transition-delay:.12s; }
+    .rv.go.d2{ transition-delay:.24s; }
+    .rv.go.d3{ transition-delay:.36s; }
+    .p-card.rv.wait{ transform:none; }
 
-    @media (max-width:599px){
-      body{ line-height:1.95; }
-      .header-cta{ padding:7px 12px; font-size:11px; }
-      .hero-copy .l2, .future-closing .l2{ padding-left:0; }
-      .btn{ width:100%; justify-content:center; }
-      .hero-bird{ width:92vw; right:-18vw; top:10vh; opacity:.85; }
+    @media (prefers-reduced-motion:no-preference){
+      .tunnel{ animation:sway 14s ease-in-out infinite alternate; }
+      @keyframes sway{ from{ perspective-origin:47% 44%; } to{ perspective-origin:53% 49%; } }
     }
-
     @media (prefers-reduced-motion:reduce){
       html{ scroll-behavior:auto; }
-      .marquee-track{ animation:none; }
       .rv.wait{ opacity:1; transform:none; }
     }
   </style>
@@ -416,178 +671,225 @@
 
 <body>
   <header class="header">
-    <a class="logo" href="#top" aria-label="WONDERVOGEL トップへ">WONDERVOGEL</a>
-    <a class="header-cta" href="#entry">ENTRY</a>
+    <a class="brand" href="#top" aria-label="WONDERVOGEL 新卒採用 トップへ">
+      <!-- ロゴ画像がある場合は差し替え：<img src="logo.svg" alt="WONDERVOGEL" height="22"> -->
+      <span class="brand-name">WONDERVOGEL</span>
+      <span class="brand-sub">NEW GRADUATE<br>RECRUITMENT</span>
+    </a>
+    <nav class="nav" aria-label="主要リンク">
+      <a class="nav-btn entry" href="#recruit">ENTRY</a>
+      <a class="nav-btn about" href="#about">ABOUT</a>
+      <button class="menu-btn" type="button" id="menuBtn" aria-controls="menu" aria-expanded="false" aria-label="メニューを開く">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
   </header>
+
+  <div class="menu" id="menu" aria-hidden="true">
+    <ul>
+      <li><a href="#about"><span><span class="en">ABOUT</span><span class="jp">私たちについて</span></span><span class="sq"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></a></li>
+      <li><a href="#strength"><span><span class="en">STRENGTH</span><span class="jp">WONDERVOGELの強み</span></span><span class="sq"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></a></li>
+      <li><a href="#field"><span><span class="en">FIELD</span><span class="jp">仕事のフィールド</span></span><span class="sq"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></a></li>
+      <li><a href="#people"><span><span class="en">PEOPLE</span><span class="jp">働く仲間</span></span><span class="sq"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></a></li>
+      <li><a href="#growth"><span><span class="en">GROWTH</span><span class="jp">入社後の成長</span></span><span class="sq"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></a></li>
+      <li><a href="#wanted"><span><span class="en">WANTED</span><span class="jp">求める仲間</span></span><span class="sq"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></a></li>
+      <li><a href="#future"><span><span class="en">FOR YOU</span><span class="jp">これからのあなたへ</span></span><span class="sq"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></a></li>
+      <li><a href="#recruit"><span><span class="en">RECRUIT</span><span class="jp">採用情報・応募</span></span><span class="sq"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></a></li>
+    </ul>
+  </div>
 
   <main id="top">
 
     <!-- ===== ファーストビュー ===== -->
     <section class="hero" aria-labelledby="hero-copy">
-      <!-- 渡り鳥（Wandervogel）をモチーフにしたグラフィック -->
-      <svg class="hero-bird" viewBox="0 0 600 420" aria-hidden="true">
-        <path class="rv" d="M20 250 C 130 170, 220 150, 300 210 C 360 120, 450 60, 590 40 C 500 110, 430 190, 395 280 C 370 340, 320 370, 270 360 C 300 330, 305 300, 290 270 C 220 240, 120 240, 20 250 Z"/>
-      </svg>
-
-      <div class="wrap">
-        <h1 id="hero-copy" class="hero-copy">
-          <span class="rv"><span class="ib">クリエイティブで</span><span class="ib">生きていく、</span></span>
-          <span class="rv d1 l2"><span class="ib">クリエイティブで</span><span class="ib">良くしていく。</span></span>
-        </h1>
-        <p class="hero-en rv d2">IDEAS, WORDS, EXPRESSION.<br><em>and STRATEGY.</em></p>
-
-        <div class="hero-foot rv d3">
-          <div>
-            <!-- ロゴ画像がある場合は差し替え：<img src="logo.svg" alt="WONDERVOGEL"> -->
-            <p class="hero-logo">WONDERVOGEL</p>
-            <p class="hero-lead">あなたの好奇心を、誰かの未来につなげよう。</p>
-          </div>
-          <a class="btn" href="#entry">採用情報を見る <span class="arrow">→</span></a>
-        </div>
+      <div class="tunnel" aria-hidden="true">
+        <div class="wall ceil" data-wall></div>
+        <div class="wall floor" data-wall></div>
+        <div class="wall left" data-wall></div>
+        <div class="wall right" data-wall></div>
+        <div class="tunnel-fade"></div>
       </div>
+
+      <div class="hero-center">
+        <p class="hero-en">IDEAS, WORDS, EXPRESSION. <em>and STRATEGY.</em></p>
+        <h1 id="hero-copy" class="hero-copy">
+          <span><span class="ib">クリエイティブで</span><span class="ib">生きていく、</span></span>
+          <span><span class="ib">クリエイティブで</span><span class="ib">良くしていく。</span></span>
+        </h1>
+        <p class="hero-lead">あなたの好奇心を、誰かの未来につなげよう。</p>
+        <a class="btn" href="#recruit">採用情報を見る <span class="sq"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></a>
+      </div>
+
+      <p class="hero-v" aria-hidden="true">WONDER</p>
+      <p class="hero-h" aria-hidden="true">VOGEL</p>
+
+      <a class="pickup" href="#field">
+        <div class="pickup-head"><span>PICK UP ｜ 2027</span><span>WONDERVOGEL RECRUITMENT</span></div>
+        <div class="pickup-body">
+          <div class="photo"><span class="ph-note">PHOTO</span></div>
+          <div>
+            <h2>仙台から、大きな舞台へ。</h2>
+            <p>2027年に仙台市で開催される国際会議の企画・演出にも携わります。企業の広告や映像、地域のイベントから、国際会議やフェスなどの大型案件まで。</p>
+          </div>
+        </div>
+      </a>
     </section>
 
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track">
-        <span>IDEAS</span><span>WORDS</span><span>EXPRESSION</span><span>STRATEGY</span><span>CURIOSITY</span><span>SENDAI</span>
-        <span>IDEAS</span><span>WORDS</span><span>EXPRESSION</span><span>STRATEGY</span><span>CURIOSITY</span><span>SENDAI</span>
-      </div>
-    </div>
-
     <!-- ===== 私たちについて ===== -->
-    <section class="section" id="about">
-      <div class="wrap split">
-        <div class="sticky">
-          <p class="label rv"><span class="num">01</span> ABOUT <span class="jp">私たちについて</span></p>
-          <h2 class="h2 rv"><span class="ib">考えるところから、</span><span class="ib">つくる。</span><br><span class="hl"><span class="ib">つくった先まで、</span><span class="ib">考える。</span></span></h2>
+    <section class="section bordered" id="about">
+      <div class="wrap">
+        <div class="about-grid">
+          <div>
+            <div class="grad-block dots rv"></div>
+            <h2 class="ttl rv" style="margin:clamp(20px,3vw,32px) 0 0"><span class="en">ABOUT</span><span class="jp">私たちについて</span></h2>
+          </div>
+          <div class="card rv d1">
+            <p class="tag">考えるところから、つくる。<br>つくった先まで、考える。</p>
+            <div class="body">
+              <p>WONDERVOGELは、仙台を拠点に、ブランディング、マーケティング、クリエイティブを手がける会社です。</p>
+              <p>デザインや映像をつくることはもちろん、「どんな価値を届けるか」「誰に、どう伝えるか」というコンセプトや企画から関わります。</p>
+            </div>
+            <span class="sq corner" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span>
+          </div>
         </div>
-        <div class="body">
-          <p class="rv">WONDERVOGELは、仙台を拠点に、ブランディング、マーケティング、クリエイティブを手がける会社です。</p>
-          <p class="rv">デザインや映像をつくることはもちろん、「どんな価値を届けるか」「誰に、どう伝えるか」というコンセプトや企画から関わります。</p>
-          <p class="rv">企業や地域の事業づくりにも参画し、課題を見つけるところから、実現するところまで。企画と言葉と表現で、より良い未来をつくることを目指しています。</p>
+        <div class="about-cards">
+          <div class="mini rv"><p class="tag">ブランディング</p><p>企業や商品の魅力を見つけ、どんな価値を届けるかを考えます。</p><span class="sq corner" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></div>
+          <div class="mini rv d1"><p class="tag">マーケティング</p><p>誰に、どう伝えるか。届け方まで含めて考えます。</p><span class="sq corner" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></div>
+          <div class="mini rv d2"><p class="tag">クリエイティブ</p><p>企業や地域の事業づくりにも参画し、課題を見つけるところから、実現するところまで。企画と言葉と表現で、より良い未来をつくることを目指しています。</p><span class="sq corner" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></div>
         </div>
       </div>
     </section>
 
     <!-- ===== 強み ===== -->
-    <section class="section" id="strength">
-      <div class="wrap split">
-        <div class="sticky">
-          <p class="label rv"><span class="num">02</span> STRENGTH <span class="jp">強み</span></p>
-          <h2 class="h2 rv"><span class="hl">企画</span>で、<br>可能性を広げる。</h2>
-        </div>
-        <div>
-          <div class="body">
-            <p class="rv">私たちの強みは、企画です。</p>
-            <p class="rv">相手の話を聞き、調べ、考え、アイデアを言葉にする。そして、デザイン、映像、Web、イベントなどを組み合わせ、形にしていきます。</p>
+    <section class="section strength bordered" id="strength">
+      <div class="strength-bg" aria-hidden="true">企画で可能性を広げる。こうしたらもっと良くなる。聞く調べる考える言葉にする。</div>
+      <div class="wrap">
+        <div class="strength-head">
+          <h2 class="ttl rv"><span class="en">STRENGTH</span><span class="jp">WONDERVOGELの強み</span></h2>
+          <div class="body rv d1">
+            <p class="lead-serif">企画で、可能性を広げる。</p>
+            <p>私たちの強みは、企画です。相手の話を聞き、調べ、考え、アイデアを言葉にする。そして、デザイン、映像、Web、イベントなどを組み合わせ、形にしていきます。</p>
           </div>
-          <ul class="areas">
-            <li class="rv">企業や商品の魅力を見つけ、ブランドを育てる</li>
-            <li class="rv">人の心が動く広告やプロモーションを考える</li>
-            <li class="rv">人が集まり、交流するイベントをつくる</li>
-            <li class="rv">地域のにぎわいや、まちづくりに関わる</li>
-            <li class="rv">新しい商品、サービス、事業を企画する</li>
-          </ul>
-          <p class="quote rv">「こうしたら、もっと良くなる。」<br>その発想が、仕事の始まりです。</p>
         </div>
+        <ul class="areas">
+          <li class="area a1 rv"><div class="area-txt"><span class="area-num">01</span><span class="area-label">企業や商品の魅力を見つけ、ブランドを育てる</span></div><div class="photo"></div><span class="sq corner" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></li>
+          <li class="area a2 rv d1"><div class="area-txt"><span class="area-num">02</span><span class="area-label">人の心が動く広告やプロモーションを考える</span></div><div class="photo"></div><span class="sq corner" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></li>
+          <li class="area a3 rv"><div class="area-txt"><span class="area-num">03</span><span class="area-label">人が集まり、交流するイベントをつくる</span></div><div class="photo"></div><span class="sq corner" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></li>
+          <li class="area a4 rv d1"><div class="area-txt"><span class="area-num">04</span><span class="area-label">地域のにぎわいや、まちづくりに関わる</span></div><div class="photo"></div><span class="sq corner" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></li>
+          <li class="area a5 wide rv"><div class="area-txt"><span class="area-num">05</span><span class="area-label">新しい商品、サービス、事業を企画する</span></div><div class="photo"></div><span class="sq corner" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></li>
+        </ul>
+        <p class="quote rv">「こうしたら、もっと良くなる。」<small>その発想が、仕事の始まりです。</small></p>
       </div>
     </section>
 
     <!-- ===== 仕事のフィールド ===== -->
-    <section class="section field" id="field">
+    <section class="section field dots" id="field">
       <div class="wrap">
-        <p class="label rv"><span class="num">03</span> FIELD <span class="jp">仕事のフィールド</span></p>
-        <h2 class="h2 rv">仙台から、<span class="hl">大きな舞台へ。</span></h2>
-        <div class="body">
-          <p class="rv">企業の広告や映像、地域のイベントから、国際会議やフェスなどの大型案件まで。さまざまな人と協力しながら、企画を実現します。</p>
+        <h2 class="ttl rv"><span class="en">FIELD</span><span class="jp">仕事のフィールド</span></h2>
+        <div class="field-grid">
+          <div class="field-intro">
+            <p class="lead-serif rv" style="font-size:clamp(22px,2.4vw,30px)">仙台から、<br>大きな舞台へ。</p>
+            <p class="rv">企業の広告や映像、地域のイベントから、国際会議やフェスなどの大型案件まで。さまざまな人と協力しながら、企画を実現します。</p>
+            <p class="badge rv"><b>2027</b>仙台市で開催される国際会議の企画・演出にも携わります。</p>
+          </div>
+          <div class="slider-wrap rv d1">
+            <div class="slider-ctrl">
+              <button type="button" data-dir="-1" aria-label="前へ"><svg viewBox="0 0 34 12"><path d="M33 6H1M6 1L1 6l5 5"/></svg></button>
+              <button type="button" data-dir="1" aria-label="次へ"><svg viewBox="0 0 34 12"><path d="M1 6h32M28 1l5 5-5 5"/></svg></button>
+            </div>
+            <!-- 実績写真：各 .photo に class="has-photo" と style="background-image:url('photo.jpg')" を追加して差し替え -->
+            <div class="slider" id="slider" tabindex="0" aria-label="実績のカテゴリ">
+              <div class="work w1"><div class="photo"><span class="ph-note">PHOTO</span></div><div class="work-foot"><div><span class="work-en">CONFERENCE</span><span class="work-title">国際会議</span></div><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></div></div>
+              <div class="work w2"><div class="photo"><span class="ph-note">PHOTO</span></div><div class="work-foot"><div><span class="work-en">FESTIVAL</span><span class="work-title">フェス</span></div><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></div></div>
+              <div class="work w3"><div class="photo"><span class="ph-note">PHOTO</span></div><div class="work-foot"><div><span class="work-en">ADVERTISING</span><span class="work-title">広告</span></div><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></div></div>
+              <div class="work w4"><div class="photo"><span class="ph-note">PHOTO</span></div><div class="work-foot"><div><span class="work-en">MOVIE</span><span class="work-title">映像</span></div><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></div></div>
+              <div class="work w5"><div class="photo"><span class="ph-note">PHOTO</span></div><div class="work-foot"><div><span class="work-en">LOCAL EVENT</span><span class="work-title">地域イベント</span></div><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></div></div>
+            </div>
+          </div>
         </div>
-        <p class="badge rv"><b>2027</b>年に仙台市で開催される国際会議の企画・演出にも携わります。</p>
-
-        <!-- 実績写真：各 .ph に class="has-photo" と style="background-image:url('photo.jpg')" を追加して差し替え -->
-        <div class="gallery">
-          <figure class="ph g1 rv" style="margin:0"><span><small>CONFERENCE</small>国際会議</span></figure>
-          <figure class="ph g2 rv d1" style="margin:0"><span><small>FESTIVAL</small>フェス</span></figure>
-          <figure class="ph g3 rv d2" style="margin:0"><span><small>ADVERTISING</small>広告</span></figure>
-          <figure class="ph g4 rv d1" style="margin:0"><span><small>MOVIE</small>映像</span></figure>
-          <figure class="ph g5 rv d2" style="margin:0"><span><small>EVENT</small>地域イベント</span></figure>
-        </div>
-
         <p class="field-close rv">仕事の規模も、テーマも、表現方法もさまざま。<br>幅広い経験が、あなたの視野と可能性を広げます。</p>
       </div>
     </section>
 
     <!-- ===== 働く仲間 ===== -->
-    <section class="section" id="people">
-      <div class="wrap">
-        <p class="label rv"><span class="num">04</span> PEOPLE <span class="jp">働く仲間</span></p>
-        <h2 class="h2 rv">社員全員が、<span class="hl">クリエイター。</span></h2>
-        <ul class="roles">
-          <li class="rv">企画を考える人</li>
-          <li class="rv d1">言葉を書く人</li>
-          <li class="rv d1">デザインする人</li>
-          <li class="rv d2">映像をつくる人</li>
-          <li class="rv d2">プロジェクトを動かす人</li>
-          <li class="rv d3 all">＝ 全員が、クリエイター</li>
+    <section class="section people" id="people">
+      <h2 class="people-v">働く仲間</h2>
+      <div class="people-stage">
+        <p class="people-word" aria-hidden="true"><span>PEO</span><span>PLE</span></p>
+        <!-- 社員写真：各 .photo に class="has-photo" と style="background-image:url('photo.jpg')" を追加して差し替え -->
+        <div class="p-card c1 rv"><div class="photo"><span class="ph-note">PHOTO</span></div></div>
+        <div class="p-card c2 rv d1"><div class="photo"><span class="ph-note">PHOTO</span></div><p class="tag">社員全員が、クリエイター。</p></div>
+        <div class="p-card c3 rv d2"><div class="photo"><span class="ph-note">PHOTO</span></div></div>
+        <ul class="roles rv d2">
+          <li>企画を考える人</li>
+          <li>言葉を書く人</li>
+          <li>デザインする人</li>
+          <li>映像をつくる人</li>
+          <li>プロジェクトを動かす人</li>
+          <li class="all">＝ 全員が、クリエイター</li>
         </ul>
-        <div class="body">
-          <p class="rv">私たちは、一人ひとりが創意工夫を持ち寄るクリエイターです。</p>
-          <p class="rv">自分の得意を磨きながら、ほかの分野にも挑戦する。仲間の得意と組み合わせて、一人ではできない仕事をつくる。</p>
-          <p class="rv">あなたも経験を重ねながら、自分らしい強みを見つけてください。</p>
+      </div>
+      <div class="wrap">
+        <div class="people-text">
+          <p class="lead-serif rv">私たちは、一人ひとりが創意工夫を持ち寄るクリエイターです。</p>
+          <div class="body rv d1">
+            <p>自分の得意を磨きながら、ほかの分野にも挑戦する。仲間の得意と組み合わせて、一人ではできない仕事をつくる。</p>
+            <p>あなたも経験を重ねながら、自分らしい強みを見つけてください。</p>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ===== 入社後の成長 ===== -->
-    <section class="section growth" id="growth">
+    <section class="section bordered" id="growth">
       <div class="wrap">
-        <p class="label rv"><span class="num">05</span> GROWTH <span class="jp">入社後の成長</span></p>
-        <h2 class="h2 rv">今できることより、<br><span class="hl">これから学びたいこと。</span></h2>
-        <div class="body">
-          <p class="rv">専門知識や実務経験がなくても、学ぶ意欲があれば挑戦できます。</p>
-          <p class="rv">入社後はアシスタントとして、先輩と一緒に実際のプロジェクトに参加します。</p>
+        <div class="growth-intro">
+          <h2 class="ttl rv" style="margin:0"><span class="en">GROWTH</span><span class="jp">入社後の成長</span></h2>
+          <div class="rv d1">
+            <p class="lead-serif">今できることより、<br>これから学びたいこと。</p>
+            <p>専門知識や実務経験がなくても、学ぶ意欲があれば挑戦できます。入社後はアシスタントとして、先輩と一緒に実際のプロジェクトに参加します。</p>
+          </div>
         </div>
-        <ol class="steps">
-          <li class="rv"><span class="step-n">01</span>調べる、<br>情報を整理する</li>
-          <li class="rv d1"><span class="step-n">02</span>アイデアを考え、<br>企画書にまとめる</li>
-          <li class="rv d1"><span class="step-n">03</span>打ち合わせに<br>参加する</li>
-          <li class="rv d2"><span class="step-n">04</span>デザインや映像の<br>制作を進める</li>
-          <li class="rv d2"><span class="step-n">05</span>撮影やイベントの<br>現場を経験する</li>
-        </ol>
-        <div class="note-box rv">
-          <p>クリエイティブ教育にも取り組む会社として、<strong>仕事を通じた学び</strong>を大切にしています。</p>
-          <p>教わったことを試す。分からないことを調べる。気になったものを見に行く。自分から学ぶ姿勢が、成長につながります。</p>
+        <ul class="rows">
+          <li class="rv"><span class="n">01</span><span class="t">調べる、情報を整理する</span><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></li>
+          <li class="rv"><span class="n">02</span><span class="t">アイデアを考え、企画書にまとめる</span><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></li>
+          <li class="rv"><span class="n">03</span><span class="t">打ち合わせに参加する</span><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></li>
+          <li class="rv"><span class="n">04</span><span class="t">デザインや映像の制作を進める</span><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></li>
+          <li class="rv"><span class="n">05</span><span class="t">撮影やイベントの現場を経験する</span><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></li>
+        </ul>
+        <div class="note">
+          <div class="grad-block dots rv"></div>
+          <div class="card rv d1">
+            <p class="tag">仕事を通じた学び</p>
+            <p>クリエイティブ教育にも取り組む会社として、仕事を通じた学びを大切にしています。</p>
+            <p>教わったことを試す。分からないことを調べる。気になったものを見に行く。自分から学ぶ姿勢が、成長につながります。</p>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ===== 求める仲間 ===== -->
-    <section class="section" id="wanted">
+    <section class="section wanted bordered" id="wanted">
       <div class="wrap">
-        <p class="label rv"><span class="num">06</span> WANTED <span class="jp">求める仲間</span></p>
-        <h2 class="h2 rv">好奇心。探究心。<span class="hl">遊び心。</span></h2>
-
+        <h2 class="ttl rv"><span class="en">WANTED</span><span class="jp">求める仲間</span></h2>
+        <p class="lead-serif rv">好奇心。探究心。遊び心。</p>
         <div class="triad">
-          <div class="rv"><span class="kw">好奇心</span><span class="kw-en">CURIOSITY</span><p class="say">「面白そう」と感じる。</p></div>
-          <div class="rv d1"><span class="kw">探究心</span><span class="kw-en">INQUIRY</span><p class="say">「どうして？」と掘り下げる。</p></div>
-          <div class="rv d2"><span class="kw">遊び心</span><span class="kw-en">PLAYFULNESS</span><p class="say">「こうしたら？」と発想する。</p></div>
+          <div class="mini rv"><div class="grad-band"></div><span class="kw">好奇心</span><span class="kw-en">CURIOSITY</span><p class="say">「面白そう」と感じる。</p></div>
+          <div class="mini rv d1"><div class="grad-band"></div><span class="kw">探究心</span><span class="kw-en">INQUIRY</span><p class="say">「どうして？」と掘り下げる。</p></div>
+          <div class="mini rv d2"><div class="grad-band"></div><span class="kw">遊び心</span><span class="kw-en">PLAYFULNESS</span><p class="say">「こうしたら？」と発想する。</p></div>
         </div>
-
-        <div class="split">
-          <div class="body">
-            <p class="rv">そんな気持ちを、仕事でも大切にできる人を募集します。</p>
+        <div class="wanted-grid">
+          <div class="rv">
+            <p class="tag" style="margin-bottom:18px">そんな気持ちを、仕事でも大切にできる人を募集します。</p>
+            <p>企画には、丁寧な調査や準備も必要です。思いつく楽しさと、実現するための地道な仕事。その両方に取り組める方を歓迎します。</p>
           </div>
-          <div>
-            <ul class="checks">
-              <li class="rv">広告、イベント、事業の企画を書きたい人</li>
-              <li class="rv">アイデアを、相手に伝わる言葉や資料にしたい人</li>
-              <li class="rv">イベントの企画から、当日の現場まで関わりたい人</li>
-              <li class="rv">仲間と協力して、最後まで形にしたい人</li>
-              <li class="rv">いつか実現したいことがある人</li>
-            </ul>
-            <div class="body">
-              <p class="rv">企画には、丁寧な調査や準備も必要です。<br>思いつく楽しさと、実現するための地道な仕事。その両方に取り組める方を歓迎します。</p>
-            </div>
-          </div>
+          <ul class="rows rv d1">
+            <li><span class="t">広告、イベント、事業の企画を書きたい人</span></li>
+            <li><span class="t">アイデアを、相手に伝わる言葉や資料にしたい人</span></li>
+            <li><span class="t">イベントの企画から、当日の現場まで関わりたい人</span></li>
+            <li><span class="t">仲間と協力して、最後まで形にしたい人</span></li>
+            <li><span class="t">いつか実現したいことがある人</span></li>
+          </ul>
         </div>
       </div>
     </section>
@@ -595,34 +897,36 @@
     <!-- ===== これからのあなたへ ===== -->
     <section class="section future" id="future">
       <div class="wrap">
-        <p class="label rv"><span class="num">07</span> FOR YOU <span class="jp">これからのあなたへ</span></p>
-        <h2 class="h2 rv">あなたの「やりたい」が、<br><span class="hl"><span class="ib">次の仕事に</span><span class="ib">なるかもしれない。</span></span></h2>
-        <div class="body">
-          <p class="rv">まずは、さまざまな仕事を知り、自分の力を育てる。<br>その先で、あなたがやりたい企画や、新しい事業を提案してください。</p>
+        <div class="future-panel dots">
+          <div>
+            <h2 class="ttl rv"><span class="en">FOR YOU</span><span class="jp">これからのあなたへ</span></h2>
+            <p class="lead-serif rv">あなたの「やりたい」が、<br><span class="ib">次の仕事に</span><span class="ib">なるかもしれない。</span></p>
+            <div class="body rv">
+              <p>まずは、さまざまな仕事を知り、自分の力を育てる。その先で、あなたがやりたい企画や、新しい事業を提案してください。</p>
+            </div>
+            <p class="future-q rv"><span>何をするか。</span><span>誰とするか。</span><span>どう実現するか。</span></p>
+            <p class="rv">仲間と考え、挑戦できる会社でありたいと思っています。</p>
+            <p class="future-closing rv">
+              <span><span class="ib">クリエイティブで</span><span class="ib">生きていく。</span></span>
+              <span><span class="ib">クリエイティブで</span><span class="ib">良くしていく。</span></span>
+            </p>
+            <p class="future-invite rv">その未来を、一緒につくりませんか。</p>
+          </div>
         </div>
-        <p class="future-q rv"><span>何をするか。</span><span>誰とするか。</span><span>どう実現するか。</span></p>
-        <div class="body">
-          <p class="rv">仲間と考え、挑戦できる会社でありたいと思っています。</p>
-        </div>
-        <p class="future-closing">
-          <span class="rv"><span class="ib">クリエイティブで</span><span class="ib">生きていく。</span></span>
-          <span class="rv d1 l2"><span class="ib">クリエイティブで</span><span class="ib">良くしていく。</span></span>
-        </p>
-        <p class="future-invite rv">その未来を、一緒につくりませんか。</p>
       </div>
     </section>
 
     <!-- ===== 採用情報・応募 ===== -->
-    <section class="section entry" id="entry">
+    <section class="section recruit dots" id="recruit">
       <div class="wrap">
-        <p class="label rv"><span class="num">08</span> RECRUIT <span class="jp">採用情報・応募</span></p>
-        <p class="entry-title rv" aria-hidden="true">JOIN US<span class="dot">.</span></p>
-        <div class="body">
-          <p class="rv">広告やイベントの企画・ディレクションを中心に、新しい仲間を募集しています。</p>
-          <p class="rv">募集条件・選考の詳細は、採用ページをご覧ください。</p>
+        <h2 class="ttl rv"><span class="en">RECRUIT</span><span class="jp">採用情報・応募</span></h2>
+        <div class="body rv">
+          <p>広告やイベントの企画・ディレクションを中心に、新しい仲間を募集しています。<br>募集条件・選考の詳細は、採用ページをご覧ください。</p>
         </div>
-        <!-- TODO: 新卒採用の募集要項ページのURLに差し替え -->
-        <a class="btn lg rv" href="#" target="_blank" rel="noopener">新卒採用の募集要項を見る <span class="arrow">→</span></a>
+        <ul class="recruit-links rv">
+          <!-- TODO: 新卒採用の募集要項ページのURLに差し替え -->
+          <li><a href="#" target="_blank" rel="noopener"><span>新卒採用の募集要項を見る</span><span class="sq" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4 1l5 5-5 5"/></svg></span></a></li>
+        </ul>
       </div>
     </section>
   </main>
@@ -631,14 +935,66 @@
     <div class="wrap">
       <div>
         <p class="footer-name">株式会社WONDERVOGEL</p>
-        <p>仙台市を拠点とするクリエイティブ会社</p>
+        <p class="footer-sub">仙台市を拠点とするクリエイティブ会社</p>
       </div>
-      <small>&copy; WONDERVOGEL Inc.</small>
+      <small>COPYRIGHT &copy; WONDERVOGEL INC.</small>
     </div>
   </footer>
 
   <script>
-    // スクロールに合わせてフェードイン
+    // ファーストビュー：原稿の言葉で「紙面のトンネル」を組む
+    (function(){
+      var heads = ["企画", "言葉", "表現", "戦略", "仙台", "好奇心", "探究心", "遊び心"];
+      var text = "考えるところから、つくる。つくった先まで、考える。相手の話を聞き、調べ、考え、アイデアを言葉にする。そして、デザイン、映像、Web、イベントなどを組み合わせ、形にしていきます。こうしたら、もっと良くなる。その発想が、仕事の始まりです。";
+      var walls = document.querySelectorAll("[data-wall]");
+      var k = 0;
+      walls.forEach(function(w){
+        var count = w.classList.contains("left") || w.classList.contains("right") ? 24 : 32;
+        for(var i = 0; i < count; i++){
+          var s = document.createElement("div");
+          if((i * 7 + k) % 9 === 0){
+            s.className = "sheet g";
+          } else {
+            s.className = "sheet";
+            var b = document.createElement("b");
+            b.textContent = heads[(i + k) % heads.length];
+            s.appendChild(b);
+            s.appendChild(document.createTextNode(text + text));
+          }
+          w.appendChild(s);
+        }
+        k += 3;
+      });
+    })();
+
+    // メニュー
+    (function(){
+      var btn = document.getElementById("menuBtn");
+      var menu = document.getElementById("menu");
+      function set(open){
+        document.body.classList.toggle("menu-open", open);
+        btn.setAttribute("aria-expanded", String(open));
+        btn.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
+        menu.setAttribute("aria-hidden", String(!open));
+      }
+      btn.addEventListener("click", function(){ set(!document.body.classList.contains("menu-open")); });
+      menu.addEventListener("click", function(e){ if(e.target.closest("a")) set(false); });
+      document.addEventListener("keydown", function(e){ if(e.key === "Escape") set(false); });
+    })();
+
+    // 実績スライダー
+    (function(){
+      var slider = document.getElementById("slider");
+      document.querySelectorAll(".slider-ctrl button").forEach(function(b){
+        b.addEventListener("click", function(){
+          var card = slider.querySelector(".work");
+          var step = card ? card.getBoundingClientRect().width + 30 : 300;
+          slider.scrollBy({ left: step * Number(b.dataset.dir), behavior: "smooth" });
+        });
+      });
+    })();
+
+    // スクロール表示（初期表示で画面外にある要素だけを隠す）
     (function(){
       if(!("IntersectionObserver" in window)) return;
       if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
