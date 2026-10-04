@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>新卒採用 | WONDERVOGEL</title>
+  <meta name="description" content="クリエイティブで生きていく、クリエイティブで良くしていく。仙台を拠点にブランディング、マーケティング、クリエイティブを手がける株式会社WONDERVOGELの新卒採用サイトです。" />
+  <meta property="og:title" content="新卒採用 | WONDERVOGEL" />
+  <meta property="og:description" content="あなたの好奇心を、誰かの未来につなげよう。仙台のクリエイティブ会社WONDERVOGELが新しい仲間を募集しています。" />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#111111" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --ink:#111111;
+      --paper:#f4f1ea;
+      --paper-2:#e9e4d8;
+      --white:#ffffff;
+      --accent:#ff4a1c;
+      --muted:#6b675f;
+      --line:rgba(17,17,17,.14);
+
+      --jp:"Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", sans-serif;
+      --en:"Archivo", "Helvetica Neue", Arial, sans-serif;
+
+      --gutter:clamp(16px, 5vw, 64px);
+      --max:1200px;
+    }
+
+    *,*::before,*::after{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+    body{
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:var(--jp);
+      font-size:16px;
+      line-height:2;
+      letter-spacing:.04em;
+      font-feature-settings:"palt";
+      overflow-x:hidden;
+    }
+    img{ max-width:100%; display:block; }
+    a{ color:inherit; }
+    p{ margin:0 0 1.2em; }
+    p:last-child{ margin-bottom:0; }
+
+    .wrap{
+      width:100%;
+      max-width:calc(var(--max) + var(--gutter) * 2);
+      margin:0 auto;
+      padding:0 var(--gutter);
+    }
+
+    /* ===== Header ===== */
+    .header{
+      position:fixed; inset:0 0 auto 0; z-index:50;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px var(--gutter);
+      color:var(--white);
+      mix-blend-mode:difference;
+      pointer-events:none;
+    }
+    .header > *{ pointer-events:auto; }
+    .logo{
+      font-family:var(--en); font-weight:900; font-size:15px;
+      letter-spacing:.18em; text-decoration:none;
+    }
+    .header-cta{
+      font-family:var(--en); font-weight:700; font-size:12px; letter-spacing:.16em;
+      text-decoration:none; padding:8px 16px; border:1px solid currentColor; border-radius:999px;
+      transition:background .25s, color .25s;
+    }
+    .header-cta:hover{ background:var(--white); color:var(--ink); }
+
+    /* ===== Hero ===== */
+    .hero{
+      position:relative;
+      min-height:100svh;
+      background:var(--ink);
+      color:var(--white);
+      display:flex; flex-direction:column; justify-content:flex-end;
+      padding:120px 0 40px;
+      overflow:hidden;
+    }
+    .hero-bird{
+      position:absolute; right:-6vw; top:8vh;
+      width:min(62vw, 720px); height:auto;
+      opacity:.95;
+    }
+    .hero-bird path{ fill:var(--accent); }
+    .hero-copy{
+      position:relative;
+      font-weight:900;
+      font-size:clamp(30px, 4.6vw, 72px);
+      line-height:1.28;
+      letter-spacing:.02em;
+      margin:0 0 .5em;
+    }
+    .hero-copy > span{ display:block; }
+    .hero-copy .l2{ padding-left:1em; }
+    .hero-en{
+      position:relative;
+      font-family:var(--en); font-weight:700;
+      font-size:clamp(13px, 1.6vw, 18px);
+      letter-spacing:.2em; line-height:1.7;
+      color:rgba(255,255,255,.72);
+      margin:0 0 clamp(32px, 6vh, 64px);
+    }
+    .hero-en em{ font-style:normal; color:var(--accent); }
+    .hero-foot{
+      position:relative;
+      display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:24px;
+      border-top:1px solid rgba(255,255,255,.2);
+      padding-top:24px;
+    }
+    .hero-logo{
+      font-family:var(--en); font-weight:900;
+      font-size:clamp(28px, 5vw, 56px);
+      letter-spacing:.06em; line-height:1;
+      margin:0 0 10px;
+    }
+    .hero-lead{ margin:0; font-size:clamp(15px, 1.6vw, 18px); font-weight:500; }
+
+    .btn{
+      display:inline-flex; align-items:center; gap:14px;
+      background:var(--accent); color:var(--white);
+      font-weight:700; font-size:15px; letter-spacing:.08em; text-decoration:none;
+      padding:18px 28px; border-radius:999px;
+      transition:transform .25s, background .25s;
+    }
+    .btn:hover{ transform:translateY(-2px); background:#e83c10; }
+    .btn .arrow{ display:inline-block; transition:transform .25s; font-family:var(--en); }
+    .btn:hover .arrow{ transform:translateX(4px); }
+    .btn.lg{ font-size:clamp(16px, 2vw, 20px); padding:22px 36px; }
+
+
+    /* ===== Marquee ===== */
+    .marquee{
+      background:var(--accent); color:var(--white);
+      overflow:hidden; white-space:nowrap;
+      font-family:var(--en); font-weight:900;
+      font-size:clamp(20px, 3vw, 36px); letter-spacing:.06em;
+      padding:14px 0;
+    }
+    .marquee-track{ display:inline-flex; animation:marquee 32s linear infinite; }
+    .marquee-track span{ padding-right:1.4em; }
+    @keyframes marquee{ to{ transform:translateX(-50%); } }
+
+    /* ===== Section common ===== */
+    .section{ padding:clamp(88px, 14vw, 180px) 0; position:relative; }
+    .section + .section{ border-top:1px solid var(--line); }
+    .label{
+      display:flex; align-items:center; gap:14px;
+      font-family:var(--en); font-weight:700; font-size:12px; letter-spacing:.22em;
+      color:var(--accent);
+      margin:0 0 28px;
+    }
+    .label .num{ color:var(--ink); }
+    .label::after{ content:""; width:40px; height:1px; background:currentColor; }
+    .label .jp{ font-family:var(--jp); letter-spacing:.12em; color:var(--muted); font-weight:500; }
+
+    .h2{
+      font-weight:900;
+      font-size:clamp(28px, 4.6vw, 56px);
+      line-height:1.45;
+      letter-spacing:.03em;
+      margin:0 0 clamp(32px, 5vw, 56px);
+    }
+    .h2 .hl{ color:var(--accent); }
+    .ib{ display:inline-block; }
+    .body{ max-width:680px; font-size:clamp(15px, 1.5vw, 17px); }
+
+    .split{
+      display:grid; grid-template-columns:1fr; gap:clamp(24px, 4vw, 64px);
+    }
+    @media (min-width:900px){
+      .split{ grid-template-columns:5fr 7fr; align-items:start; }
+      .split .sticky{ position:sticky; top:96px; }
+    }
+
+    .quote{
+      font-weight:900;
+      font-size:clamp(20px, 2.6vw, 30px);
+      line-height:1.6;
+      margin:clamp(40px, 6vw, 72px) 0 0;
+      padding-left:24px;
+      border-left:4px solid var(--accent);
+    }
+
+    /* ===== Strength list ===== */
+    .areas{ list-style:none; margin:clamp(36px, 5vw, 56px) 0 0; padding:0; counter-reset:area; }
+    .areas li{
+      counter-increment:area;
+      display:grid; grid-template-columns:56px 1fr; align-items:baseline; gap:8px;
+      padding:20px 0;
+      border-top:1px solid var(--line);
+      font-weight:700; font-size:clamp(16px, 1.9vw, 21px); line-height:1.6;
+      transition:padding .3s, color .3s;
+    }
+    .areas li:last-child{ border-bottom:1px solid var(--line); }
+    .areas li::before{
+      content:counter(area, decimal-leading-zero);
+      font-family:var(--en); font-weight:700; font-size:13px; color:var(--accent); letter-spacing:.1em;
+    }
+    .areas li:hover{ padding-left:10px; }
+
+    /* ===== Field ===== */
+    .field{ background:var(--ink); color:var(--white); }
+    .field .label .num{ color:var(--white); }
+    .field .label .jp{ color:rgba(255,255,255,.6); }
+    .field .body{ color:rgba(255,255,255,.86); }
+    .badge{
+      display:inline-block;
+      background:var(--accent); color:var(--white);
+      font-weight:700; font-size:clamp(15px, 1.7vw, 19px); line-height:1.6;
+      padding:14px 20px; margin:8px 0 0;
+    }
+    .badge b{ font-family:var(--en); font-size:1.3em; margin-right:.15em; }
+    .gallery{
+      display:grid; gap:12px;
+      grid-template-columns:repeat(2, 1fr);
+      margin:clamp(48px, 7vw, 88px) 0;
+    }
+    @media (min-width:900px){
+      .gallery{ grid-template-columns:repeat(4, 1fr); grid-auto-rows:200px; }
+      .gallery .g1{ grid-column:span 2; grid-row:span 2; }
+    }
+    .ph{
+      position:relative; overflow:hidden;
+      min-height:160px; aspect-ratio:auto;
+      background:#222;
+      display:flex; align-items:flex-end;
+      padding:16px;
+    }
+    /* 写真差し替え：.ph に style="background-image:url(...)" を指定してください */
+    .ph{ background-size:cover; background-position:center; }
+    .ph::before{
+      content:""; position:absolute; inset:0;
+      background:
+        repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 12px, transparent 12px 24px),
+        linear-gradient(160deg, var(--c1, #2a2a2a), var(--c2, #161616));
+      transition:transform .6s;
+    }
+    .ph.has-photo::before{ background:linear-gradient(to top, rgba(0,0,0,.6), transparent 55%); }
+    .ph:hover::before{ transform:scale(1.04); }
+    .ph span{
+      position:relative;
+      font-weight:700; font-size:14px; letter-spacing:.08em;
+    }
+    .ph small{
+      display:block; font-family:var(--en); font-size:11px; letter-spacing:.2em; color:var(--accent); font-weight:700;
+    }
+    .g1{ --c1:#3a2a24; --c2:#1a1412; }
+    .g2{ --c1:#24303a; --c2:#121a20; }
+    .g3{ --c1:#2e2a3a; --c2:#16141c; }
+    .g4{ --c1:#2a3a2e; --c2:#121a14; }
+    .g5{ --c1:#3a3424; --c2:#1c1912; }
+    .field-close{
+      font-weight:700; font-size:clamp(18px, 2.2vw, 26px); line-height:1.7; margin:0;
+    }
+
+    /* ===== People ===== */
+    .roles{
+      display:flex; flex-wrap:wrap; gap:10px;
+      list-style:none; padding:0; margin:0 0 clamp(36px, 5vw, 56px);
+    }
+    .roles li{
+      font-weight:700; font-size:clamp(14px, 1.6vw, 17px);
+      padding:10px 20px; border:1.5px solid var(--ink); border-radius:999px;
+      background:var(--paper);
+      transition:background .25s, color .25s, border-color .25s;
+    }
+    .roles li:hover{ background:var(--ink); color:var(--white); }
+    .roles li.all{ background:var(--accent); border-color:var(--accent); color:var(--white); }
+
+    /* ===== Growth ===== */
+    .growth{ background:var(--paper-2); }
+    .steps{
+      list-style:none; margin:clamp(36px, 5vw, 56px) 0; padding:0;
+      display:grid; gap:12px;
+      grid-template-columns:1fr;
+    }
+    @media (min-width:640px){ .steps{ grid-template-columns:repeat(2, 1fr); } }
+    @media (min-width:1000px){ .steps{ grid-template-columns:repeat(5, 1fr); } }
+    .steps li{
+      background:var(--paper);
+      padding:22px 20px 24px;
+      font-weight:700; line-height:1.7;
+      font-size:15px;
+      border-top:3px solid var(--ink);
+      transition:border-color .25s, transform .25s;
+    }
+    .steps li:hover{ border-color:var(--accent); transform:translateY(-3px); }
+    .steps .step-n{
+      display:block; font-family:var(--en); font-weight:900; font-size:32px; line-height:1;
+      color:var(--accent); margin-bottom:14px;
+    }
+    .note-box{
+      max-width:760px;
+      background:var(--ink); color:var(--white);
+      padding:clamp(24px, 4vw, 40px);
+    }
+    .note-box p{ font-size:15px; }
+    .note-box strong{ color:var(--accent); }
+
+    /* ===== Wanted ===== */
+    .triad{
+      display:grid; grid-template-columns:1fr; gap:12px;
+      margin:0 0 clamp(48px, 7vw, 80px);
+    }
+    @media (min-width:760px){ .triad{ grid-template-columns:repeat(3, 1fr); } }
+    .triad div{
+      background:var(--white);
+      padding:clamp(24px, 3vw, 36px);
+      border-radius:4px;
+    }
+    .triad .kw{
+      display:block; font-weight:900; font-size:clamp(30px, 3.6vw, 44px); line-height:1.2; margin-bottom:6px;
+    }
+    .triad .kw-en{
+      display:block; font-family:var(--en); font-weight:700; font-size:11px; letter-spacing:.22em; color:var(--accent);
+      margin-bottom:18px;
+    }
+    .triad .say{ font-weight:700; font-size:16px; line-height:1.7; margin:0; }
+
+    .checks{ list-style:none; padding:0; margin:0 0 clamp(36px, 5vw, 56px); }
+    .checks li{
+      position:relative;
+      padding:16px 0 16px 40px;
+      border-bottom:1px solid var(--line);
+      font-weight:700; font-size:clamp(15px, 1.7vw, 18px); line-height:1.7;
+    }
+    .checks li::before{
+      content:""; position:absolute; left:4px; top:50%;
+      width:18px; height:18px; margin-top:-9px;
+      border-radius:50%; background:var(--accent);
+    }
+
+    /* ===== Future ===== */
+    .future{
+      background:var(--accent); color:var(--white);
+      overflow:hidden;
+    }
+    .future .label, .future .label .num{ color:var(--white); }
+    .future .label .jp{ color:rgba(255,255,255,.8); }
+    .future .h2 .hl{ color:var(--ink); }
+    .future-q{
+      display:flex; flex-wrap:wrap; gap:8px 28px;
+      font-weight:900; font-size:clamp(18px, 2.4vw, 28px);
+      margin:clamp(32px, 5vw, 48px) 0;
+    }
+    .future-closing{
+      margin-top:clamp(56px, 8vw, 104px);
+      font-weight:900; font-size:clamp(26px, 5vw, 64px); line-height:1.4;
+    }
+    .future-closing > span{ display:block; }
+    .future-closing .l2{ padding-left:1em; }
+    .future-invite{
+      font-weight:700; font-size:clamp(17px, 2vw, 22px); margin-top:1.4em;
+    }
+
+    /* ===== Entry ===== */
+    .entry{ background:var(--ink); color:var(--white); text-align:center; }
+    .entry .label{ justify-content:center; }
+    .entry .label::after{ display:none; }
+    .entry .label .num{ color:var(--white); }
+    .entry .label .jp{ color:rgba(255,255,255,.6); }
+    .entry-title{
+      font-family:var(--en); font-weight:900;
+      font-size:clamp(56px, 14vw, 180px); line-height:.9; letter-spacing:.01em;
+      margin:0 0 .3em;
+    }
+    .entry-title .dot{ color:var(--accent); }
+    .entry .body{ margin:0 auto 40px; color:rgba(255,255,255,.86); }
+
+    /* ===== Footer ===== */
+    .footer{
+      background:var(--ink); color:rgba(255,255,255,.7);
+      border-top:1px solid rgba(255,255,255,.12);
+      padding:40px 0 calc(40px + env(safe-area-inset-bottom));
+      font-size:13px; line-height:1.8;
+    }
+    .footer .wrap{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:20px; }
+    .footer-name{ color:var(--white); font-weight:700; font-size:15px; margin:0; }
+    .footer small{ font-family:var(--en); letter-spacing:.12em; }
+
+    /* ===== Reveal ===== */
+    .js .rv{ opacity:0; transform:translateY(24px); transition:opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+    .js .rv.in{ opacity:1; transform:none; }
+    .js .rv.d1{ transition-delay:.1s; }
+    .js .rv.d2{ transition-delay:.2s; }
+    .js .rv.d3{ transition-delay:.3s; }
+
+    .hero .rv{ transition-duration:1.2s; }
+
+    @media (max-width:599px){
+      body{ line-height:1.95; }
+      .header-cta{ padding:7px 12px; font-size:11px; }
+      .hero-copy .l2, .future-closing .l2{ padding-left:0; }
+      .btn{ width:100%; justify-content:center; }
+      .hero-bird{ width:92vw; right:-18vw; top:10vh; opacity:.85; }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      html{ scroll-behavior:auto; }
+      .marquee-track{ animation:none; }
+      .js .rv{ opacity:1; transform:none; transition:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <script>document.documentElement.classList.add("js");</script>
+
+  <header class="header">
+    <a class="logo" href="#top" aria-label="WONDERVOGEL トップへ">WONDERVOGEL</a>
+    <a class="header-cta" href="#entry">ENTRY</a>
+  </header>
+
+  <main id="top">
+
+    <!-- ===== ファーストビュー ===== -->
+    <section class="hero" aria-labelledby="hero-copy">
+      <!-- 渡り鳥（Wandervogel）をモチーフにしたグラフィック -->
+      <svg class="hero-bird" viewBox="0 0 600 420" aria-hidden="true">
+        <path class="rv" d="M20 250 C 130 170, 220 150, 300 210 C 360 120, 450 60, 590 40 C 500 110, 430 190, 395 280 C 370 340, 320 370, 270 360 C 300 330, 305 300, 290 270 C 220 240, 120 240, 20 250 Z"/>
+      </svg>
+
+      <div class="wrap">
+        <h1 id="hero-copy" class="hero-copy">
+          <span class="rv"><span class="ib">クリエイティブで</span><span class="ib">生きていく、</span></span>
+          <span class="rv d1 l2"><span class="ib">クリエイティブで</span><span class="ib">良くしていく。</span></span>
+        </h1>
+        <p class="hero-en rv d2">IDEAS, WORDS, EXPRESSION.<br><em>and STRATEGY.</em></p>
+
+        <div class="hero-foot rv d3">
+          <div>
+            <!-- ロゴ画像がある場合は差し替え：<img src="logo.svg" alt="WONDERVOGEL"> -->
+            <p class="hero-logo">WONDERVOGEL</p>
+            <p class="hero-lead">あなたの好奇心を、誰かの未来につなげよう。</p>
+          </div>
+          <a class="btn" href="#entry">採用情報を見る <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>IDEAS</span><span>WORDS</span><span>EXPRESSION</span><span>STRATEGY</span><span>CURIOSITY</span><span>SENDAI</span>
+        <span>IDEAS</span><span>WORDS</span><span>EXPRESSION</span><span>STRATEGY</span><span>CURIOSITY</span><span>SENDAI</span>
+      </div>
+    </div>
+
+    <!-- ===== 私たちについて ===== -->
+    <section class="section" id="about">
+      <div class="wrap split">
+        <div class="sticky">
+          <p class="label rv"><span class="num">01</span> ABOUT <span class="jp">私たちについて</span></p>
+          <h2 class="h2 rv"><span class="ib">考えるところから、</span><span class="ib">つくる。</span><br><span class="hl"><span class="ib">つくった先まで、</span><span class="ib">考える。</span></span></h2>
+        </div>
+        <div class="body">
+          <p class="rv">WONDERVOGELは、仙台を拠点に、ブランディング、マーケティング、クリエイティブを手がける会社です。</p>
+          <p class="rv">デザインや映像をつくることはもちろん、「どんな価値を届けるか」「誰に、どう伝えるか」というコンセプトや企画から関わります。</p>
+          <p class="rv">企業や地域の事業づくりにも参画し、課題を見つけるところから、実現するところまで。企画と言葉と表現で、より良い未来をつくることを目指しています。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 強み ===== -->
+    <section class="section" id="strength">
+      <div class="wrap split">
+        <div class="sticky">
+          <p class="label rv"><span class="num">02</span> STRENGTH <span class="jp">強み</span></p>
+          <h2 class="h2 rv"><span class="hl">企画</span>で、<br>可能性を広げる。</h2>
+        </div>
+        <div>
+          <div class="body">
+            <p class="rv">私たちの強みは、企画です。</p>
+            <p class="rv">相手の話を聞き、調べ、考え、アイデアを言葉にする。そして、デザイン、映像、Web、イベントなどを組み合わせ、形にしていきます。</p>
+          </div>
+          <ul class="areas">
+            <li class="rv">企業や商品の魅力を見つけ、ブランドを育てる</li>
+            <li class="rv">人の心が動く広告やプロモーションを考える</li>
+            <li class="rv">人が集まり、交流するイベントをつくる</li>
+            <li class="rv">地域のにぎわいや、まちづくりに関わる</li>
+            <li class="rv">新しい商品、サービス、事業を企画する</li>
+          </ul>
+          <p class="quote rv">「こうしたら、もっと良くなる。」<br>その発想が、仕事の始まりです。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 仕事のフィールド ===== -->
+    <section class="section field" id="field">
+      <div class="wrap">
+        <p class="label rv"><span class="num">03</span> FIELD <span class="jp">仕事のフィールド</span></p>
+        <h2 class="h2 rv">仙台から、<span class="hl">大きな舞台へ。</span></h2>
+        <div class="body">
+          <p class="rv">企業の広告や映像、地域のイベントから、国際会議やフェスなどの大型案件まで。さまざまな人と協力しながら、企画を実現します。</p>
+        </div>
+        <p class="badge rv"><b>2027</b>年に仙台市で開催される国際会議の企画・演出にも携わります。</p>
+
+        <!-- 実績写真：各 .ph に class="has-photo" と style="background-image:url('photo.jpg')" を追加して差し替え -->
+        <div class="gallery">
+          <figure class="ph g1 rv" style="margin:0"><span><small>CONFERENCE</small>国際会議</span></figure>
+          <figure class="ph g2 rv d1" style="margin:0"><span><small>FESTIVAL</small>フェス</span></figure>
+          <figure class="ph g3 rv d2" style="margin:0"><span><small>ADVERTISING</small>広告</span></figure>
+          <figure class="ph g4 rv d1" style="margin:0"><span><small>MOVIE</small>映像</span></figure>
+          <figure class="ph g5 rv d2" style="margin:0"><span><small>EVENT</small>地域イベント</span></figure>
+        </div>
+
+        <p class="field-close rv">仕事の規模も、テーマも、表現方法もさまざま。<br>幅広い経験が、あなたの視野と可能性を広げます。</p>
+      </div>
+    </section>
+
+    <!-- ===== 働く仲間 ===== -->
+    <section class="section" id="people">
+      <div class="wrap">
+        <p class="label rv"><span class="num">04</span> PEOPLE <span class="jp">働く仲間</span></p>
+        <h2 class="h2 rv">社員全員が、<span class="hl">クリエイター。</span></h2>
+        <ul class="roles">
+          <li class="rv">企画を考える人</li>
+          <li class="rv d1">言葉を書く人</li>
+          <li class="rv d1">デザインする人</li>
+          <li class="rv d2">映像をつくる人</li>
+          <li class="rv d2">プロジェクトを動かす人</li>
+          <li class="rv d3 all">＝ 全員が、クリエイター</li>
+        </ul>
+        <div class="body">
+          <p class="rv">私たちは、一人ひとりが創意工夫を持ち寄るクリエイターです。</p>
+          <p class="rv">自分の得意を磨きながら、ほかの分野にも挑戦する。仲間の得意と組み合わせて、一人ではできない仕事をつくる。</p>
+          <p class="rv">あなたも経験を重ねながら、自分らしい強みを見つけてください。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 入社後の成長 ===== -->
+    <section class="section growth" id="growth">
+      <div class="wrap">
+        <p class="label rv"><span class="num">05</span> GROWTH <span class="jp">入社後の成長</span></p>
+        <h2 class="h2 rv">今できることより、<br><span class="hl">これから学びたいこと。</span></h2>
+        <div class="body">
+          <p class="rv">専門知識や実務経験がなくても、学ぶ意欲があれば挑戦できます。</p>
+          <p class="rv">入社後はアシスタントとして、先輩と一緒に実際のプロジェクトに参加します。</p>
+        </div>
+        <ol class="steps">
+          <li class="rv"><span class="step-n">01</span>調べる、<br>情報を整理する</li>
+          <li class="rv d1"><span class="step-n">02</span>アイデアを考え、<br>企画書にまとめる</li>
+          <li class="rv d1"><span class="step-n">03</span>打ち合わせに<br>参加する</li>
+          <li class="rv d2"><span class="step-n">04</span>デザインや映像の<br>制作を進める</li>
+          <li class="rv d2"><span class="step-n">05</span>撮影やイベントの<br>現場を経験する</li>
+        </ol>
+        <div class="note-box rv">
+          <p>クリエイティブ教育にも取り組む会社として、<strong>仕事を通じた学び</strong>を大切にしています。</p>
+          <p>教わったことを試す。分からないことを調べる。気になったものを見に行く。自分から学ぶ姿勢が、成長につながります。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 求める仲間 ===== -->
+    <section class="section" id="wanted">
+      <div class="wrap">
+        <p class="label rv"><span class="num">06</span> WANTED <span class="jp">求める仲間</span></p>
+        <h2 class="h2 rv">好奇心。探究心。<span class="hl">遊び心。</span></h2>
+
+        <div class="triad">
+          <div class="rv"><span class="kw">好奇心</span><span class="kw-en">CURIOSITY</span><p class="say">「面白そう」と感じる。</p></div>
+          <div class="rv d1"><span class="kw">探究心</span><span class="kw-en">INQUIRY</span><p class="say">「どうして？」と掘り下げる。</p></div>
+          <div class="rv d2"><span class="kw">遊び心</span><span class="kw-en">PLAYFULNESS</span><p class="say">「こうしたら？」と発想する。</p></div>
+        </div>
+
+        <div class="split">
+          <div class="body">
+            <p class="rv">そんな気持ちを、仕事でも大切にできる人を募集します。</p>
+          </div>
+          <div>
+            <ul class="checks">
+              <li class="rv">広告、イベント、事業の企画を書きたい人</li>
+              <li class="rv">アイデアを、相手に伝わる言葉や資料にしたい人</li>
+              <li class="rv">イベントの企画から、当日の現場まで関わりたい人</li>
+              <li class="rv">仲間と協力して、最後まで形にしたい人</li>
+              <li class="rv">いつか実現したいことがある人</li>
+            </ul>
+            <div class="body">
+              <p class="rv">企画には、丁寧な調査や準備も必要です。<br>思いつく楽しさと、実現するための地道な仕事。その両方に取り組める方を歓迎します。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== これからのあなたへ ===== -->
+    <section class="section future" id="future">
+      <div class="wrap">
+        <p class="label rv"><span class="num">07</span> FOR YOU <span class="jp">これからのあなたへ</span></p>
+        <h2 class="h2 rv">あなたの「やりたい」が、<br><span class="hl"><span class="ib">次の仕事に</span><span class="ib">なるかもしれない。</span></span></h2>
+        <div class="body">
+          <p class="rv">まずは、さまざまな仕事を知り、自分の力を育てる。<br>その先で、あなたがやりたい企画や、新しい事業を提案してください。</p>
+        </div>
+        <p class="future-q rv"><span>何をするか。</span><span>誰とするか。</span><span>どう実現するか。</span></p>
+        <div class="body">
+          <p class="rv">仲間と考え、挑戦できる会社でありたいと思っています。</p>
+        </div>
+        <p class="future-closing">
+          <span class="rv"><span class="ib">クリエイティブで</span><span class="ib">生きていく。</span></span>
+          <span class="rv d1 l2"><span class="ib">クリエイティブで</span><span class="ib">良くしていく。</span></span>
+        </p>
+        <p class="future-invite rv">その未来を、一緒につくりませんか。</p>
+      </div>
+    </section>
+
+    <!-- ===== 採用情報・応募 ===== -->
+    <section class="section entry" id="entry">
+      <div class="wrap">
+        <p class="label rv"><span class="num">08</span> RECRUIT <span class="jp">採用情報・応募</span></p>
+        <p class="entry-title rv" aria-hidden="true">JOIN US<span class="dot">.</span></p>
+        <div class="body">
+          <p class="rv">広告やイベントの企画・ディレクションを中心に、新しい仲間を募集しています。</p>
+          <p class="rv">募集条件・選考の詳細は、採用ページをご覧ください。</p>
+        </div>
+        <!-- TODO: 新卒採用の募集要項ページのURLに差し替え -->
+        <a class="btn lg rv" href="#" target="_blank" rel="noopener">新卒採用の募集要項を見る <span class="arrow">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div>
+        <p class="footer-name">株式会社WONDERVOGEL</p>
+        <p>仙台市を拠点とするクリエイティブ会社</p>
+      </div>
+      <small>&copy; WONDERVOGEL Inc.</small>
+    </div>
+  </footer>
+
+  <script>
+    // スクロールに合わせてフェードイン
+    (function(){
+      var els = document.querySelectorAll(".rv");
+      if(!("IntersectionObserver" in window)){
+        els.forEach(function(el){ el.classList.add("in"); });
+        return;
+      }
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        });
+      }, { rootMargin:"0px 0px -8% 0px", threshold:0.01 });
+      els.forEach(function(el){ io.observe(el); });
+    })();
+  </script>
+</body>
+</html>
