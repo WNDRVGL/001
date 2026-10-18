@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f3f0e8;
+  --color-paper-2: #e9e4d8;
+  --color-paper-3: #ddd6c6;
+  --color-ink: #17171a;
+  --color-ink-2: #26262b;
+  --color-ink-3: #3a3a41;
+  --color-mute: #5c5a55;
+  --color-mute-dark: #a7a49c;
+  --color-line: #17171a;
+  --color-signal: #ff4b1f;
+  --color-signal-ink: #b9330a;
+  --color-night: #0a0d14;
+  --color-night-2: #121827;
+  --color-redlight: #ff3b3b;
+  --color-bluelight: #4d7cff;
+
+  --font-sans: var(--font-noto-sans-jp), "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+  --font-display: var(--font-archivo), var(--font-noto-sans-jp), sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --breakpoint-xs: 30rem;
+}
+
+:root {
+  --header-h: 64px;
+  color-scheme: light;
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --header-h: 72px;
+  }
+}
+
+html {
+  scroll-padding-top: calc(var(--header-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "palt" 1;
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  overflow-x: clip;
+}
+
+/* 日本語見出しは文節で改行し、それでも収まらない場合は折り返す */
+.jp-heading {
+  word-break: auto-phrase;
+  overflow-wrap: anywhere;
+  line-break: strict;
+  text-wrap: balance;
+  letter-spacing: 0.01em;
+  font-feature-settings: "palt" 1;
+}
+
+.jp-body {
+  overflow-wrap: anywhere;
+  line-break: strict;
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.on-dark :focus-visible,
+.on-dark:focus-visible {
+  outline-color: #ffb199;
+}
+
+::selection {
+  background: var(--color-signal);
+  color: var(--color-ink);
+}
+
+/* 細い罫線の紙面グリッド */
+.paper-grid {
+  background-image:
+    linear-gradient(to right, rgb(23 23 26 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(23 23 26 / 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* 走査線（主力番組の枠内でのみ使用） */
+.scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0.035) 0,
+    rgb(255 255 255 / 0.035) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+/* ティッカー */
+.ticker-track {
+  animation: ticker 48s linear infinite;
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.rec-dot {
+  animation: rec 1.6s steps(2, jump-none) infinite;
+}
+
+@keyframes rec {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ticker-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}
